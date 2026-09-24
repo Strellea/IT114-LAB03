@@ -486,10 +486,12 @@
     <!-- (c)–(f) Milestone 3 and later deliverables -->
     <section>
       <h2>Design Pattern Mapping</h2>
+    
       <p class="note">
         Each pattern is selected to address a specific user story. The patterns will be implemented
         functionally in the Milestone 4 prototype.
       </p>
+    
       <div class="table-wrap">
         <table class="matrix-table">
           <tr>
@@ -498,41 +500,70 @@
             <th>How We Will Apply It</th>
             <th>Rationale</th>
           </tr>
+    
           <tr>
-            <td>US1 – Progress</td>
+            <td><strong>US1 — Clear Appointment Progress</strong></td>
             <td><strong>Stepper</strong></td>
-            <td>Display Location → Date &amp; Time → Personal Information → Review at the top of the appointment flow.</td>
-            <td>Helps users understand their current position and what steps remain.</td>
+            <td>
+              Display the appointment steps in sequence:
+              Location → Date &amp; Time → Personal Information → Review.
+            </td>
+            <td>
+              Shows the user's current step and the remaining steps during the appointment process.
+            </td>
           </tr>
+    
           <tr>
-            <td>US2 – Clear controls</td>
-            <td><strong>Clear visual hierarchy / prominent buttons</strong></td>
-            <td>Use consistent primary buttons with labels such as “Continue” and “Back,” and make clickable date/time options visually distinct.</td>
-            <td>Makes important actions easier to recognize and reduces uncertainty about what is clickable.</td>
-          </tr>
-          <tr>
-            <td>US3 – Form errors</td>
-            <td><strong>Inline Validation</strong></td>
-            <td>Validate the contact number immediately and display an error message beside the field.</td>
-            <td>Allows users to correct mistakes before proceeding.</td>
-          </tr>
-          <tr>
-            <td>US4 – Information overload</td>
+            <td><strong>US2 — Clear and Noticeable Buttons</strong></td>
             <td><strong>Progressive Disclosure</strong></td>
-            <td>Place detailed requirements and additional instructions inside expandable sections.</td>
-            <td>Reduces unnecessary information on the main screen while keeping details available.</td>
+            <td>
+              Keep the page focused by showing important actions first and displaying additional
+              information only when needed.
+            </td>
+            <td>
+              Keeps the page focused by showing important actions first and additional information
+              only when needed.
+            </td>
           </tr>
+    
           <tr>
-            <td>US4 – Organization</td>
-            <td><strong>Grouped Fields / Card Sectioning</strong></td>
-            <td>Separate appointment location, date/time, and personal information into clear sections.</td>
-            <td>Makes the appointment process easier to scan and understand.</td>
+            <td><strong>US3 — Error Handling</strong></td>
+            <td><strong>Inline Validation</strong></td>
+            <td>
+              Validate the contact number and other required information while the user is completing
+              the form, and display an error message beside the field when the information is incorrect
+              or incomplete.
+            </td>
+            <td>
+              Immediately tells the user when information is incorrect or incomplete and shows what
+              needs to be fixed.
+            </td>
           </tr>
+    
           <tr>
-            <td>US5 – Date/time selection</td>
+            <td><strong>US4 — Simple and Organized Information</strong></td>
             <td><strong>Grouped Fields / Card Sectioning</strong></td>
-            <td>Display available dates and time slots as clearly bordered selectable cards/buttons.</td>
-            <td>Makes available choices visually obvious and easier to select.</td>
+            <td>
+              Group related information and instructions into clear sections or cards, such as
+              appointment details, requirements, and personal information.
+            </td>
+            <td>
+              Groups related information into clear sections so the page is easier to read and
+              understand.
+            </td>
+          </tr>
+    
+          <tr>
+            <td><strong>US5 — Clear Date and Time Selection</strong></td>
+            <td><strong>Progressive Disclosure</strong></td>
+            <td>
+              Let the user choose an available date first, then display the available time slots
+              for the selected date.
+            </td>
+            <td>
+              Lets the user choose an available date first, then displays the available time slots
+              for that selected date.
+            </td>
           </tr>
         </table>
       </div>
