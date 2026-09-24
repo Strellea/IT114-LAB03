@@ -125,6 +125,159 @@
     section { padding: 16px; }
     .tab-btn { padding: 10px 12px; }
   }
+
+  /* Milestone 3 */
+  .matrix-table td:first-child,
+  .matrix-table th:first-child { font-weight: 600; }
+
+  .decision-card {
+    border-left: 4px solid var(--gold);
+    background: #fffdf5;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+  }
+
+  .wireframe {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: #fafbfc;
+    padding: 18px;
+    margin: 18px 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .wf-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .wf-stepper {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 12px 0 18px;
+    font-size: 0.86rem;
+  }
+
+  .wf-step {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #fff;
+  }
+
+  .wf-step.active {
+    background: var(--navy-light);
+    border-color: var(--navy);
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .wf-step.done {
+    background: #eef5ef;
+    border-color: #8db49a;
+  }
+
+  .wf-panel {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    background: #fff;
+    margin: 10px 0;
+  }
+
+  .wf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .wf-option {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    background: #fff;
+  }
+
+  .wf-option.available {
+    border-color: var(--navy);
+  }
+
+  .wf-option.unavailable {
+    opacity: 0.55;
+    background: #f1f2f4;
+  }
+
+  .wf-time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .wf-input {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px;
+    margin: 5px 0 10px;
+    background: #fff;
+  }
+
+  .wf-input.error {
+    border: 2px solid #b42318;
+  }
+
+  .wf-error {
+    color: #b42318;
+    font-size: 0.84rem;
+    margin-top: -5px;
+    margin-bottom: 8px;
+  }
+
+  .wf-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .wf-button {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-weight: 600;
+  }
+
+  .wf-button.primary {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+
+  .callout {
+    background: #fff8dc;
+    border: 1px dashed var(--gold);
+    border-radius: 7px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .callout strong { color: var(--navy); }
+
+  @media (max-width: 700px) {
+    .wf-grid { grid-template-columns: repeat(2, 1fr); }
+    .wf-time-grid { grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -219,6 +372,7 @@
     <!-- (b) Decision log -->
     <section>
       <h2>Decision Log</h2>
+      <p class="note">Milestone 2 and Milestone 3 decisions are recorded below in chronological order.</p>
 
       <div class="log-entry">
         <h3>Entry #1 – Primary user and user stories</h3>
@@ -241,7 +395,7 @@
           <li>Some buttons and links were not easy to notice or did not clearly look clickable.</li>
           <li>Some users wanted a clearer indication of their progress during the appointment process.</li>
           <li>The website did not immediately give clear feedback when incorrect or incomplete information, such as a contact number, was entered.</li>
-          <li>Finding a suitable available date and time could take extra effort when preferred schedules were already full.</li>
+          <li>Available dates and time slots were not visually clear as selectable options, so users had to look carefully to determine which choices were available.</li>
         </ul>
         <p>
           <strong>Result:</strong> Based on the users' answers, we created five user stories 
@@ -250,7 +404,41 @@
         </p>
       </div>
 
-      <div class="placeholder">Entry #2 (Milestone 3 – pattern and resource choices) will be added here.</div>
+      <div class="log-entry">
+        <h3>Entry #2 – Pattern, resource, tool, and wireframe choices</h3>
+        <p class="date">September 25, 2026 · Milestone 3</p>
+
+        <p>
+          <strong>Pattern decisions:</strong> We selected the Stepper pattern for US1 because users wanted
+          to know their current position and the remaining steps in the appointment process. We selected
+          Inline Validation for US3 because one user experienced difficulty noticing an incorrect contact
+          number. We selected Progressive Disclosure and Grouped Fields/Card Sectioning for US4 to reduce
+          the amount of information presented at one time and organize related content. For US5, available
+          appointment dates and time slots will be presented as clearly selectable cards so users can
+          distinguish available choices more easily.
+        </p>
+
+        <p>
+          <strong>Open-source resource decisions:</strong> We evaluated Bootstrap and Bulma as UI kits,
+          and Lucide and Font Awesome as icon libraries. We selected Bootstrap because its components fit
+          the form, button, card, validation, and responsive-layout requirements of our user stories.
+          We selected Lucide because its lightweight icons fit the calendar, clock, location, user,
+          check, and warning actions needed in the redesign.
+        </p>
+
+        <p>
+          <strong>Tool decisions:</strong> We used Messenger for user communication and interviews, Figma
+          for wireframing and annotation, Visual Studio Code for building the HTML/CSS/JavaScript prototype,
+          and Google Chrome for testing.
+        </p>
+
+        <p>
+          <strong>Wireframe decisions:</strong> The first screen focuses on appointment date and time
+          selection and addresses US1, US2, US4, and US5. The second screen focuses on personal information
+          and addresses US1, US3, and US4. These screens will serve as the basis for the functional prototype
+          in Milestone 4.
+        </p>
+      </div>
     </section>
 
     <section>
@@ -289,26 +477,280 @@
         </ul>
       </details>
 
-      <details>
-        <summary>User 4 – Returning applicant (pending)</summary>
-        <ul><li>Interview not yet conducted.</li></ul>
-      </details>
+      <div class="placeholder">
+        Three users were interviewed for Milestone 2: two first-time applicants and one returning applicant.
+        No additional user is being counted in the Milestone 2 research.
+      </div>
     </section>
 
-    <!-- (c)–(f) placeholders for later milestones -->
+    <!-- (c)–(f) Milestone 3 and later deliverables -->
+    <section>
+      <h2>Design Pattern Mapping</h2>
+      <p class="note">
+        Each pattern is selected to address a specific user story. The patterns will be implemented
+        functionally in the Milestone 4 prototype.
+      </p>
+      <div class="table-wrap">
+        <table class="matrix-table">
+          <tr>
+            <th>User Story</th>
+            <th>Design Pattern</th>
+            <th>How We Will Apply It</th>
+            <th>Rationale</th>
+          </tr>
+          <tr>
+            <td>US1 – Progress</td>
+            <td><strong>Stepper</strong></td>
+            <td>Display Location → Date &amp; Time → Personal Information → Review at the top of the appointment flow.</td>
+            <td>Helps users understand their current position and what steps remain.</td>
+          </tr>
+          <tr>
+            <td>US2 – Clear controls</td>
+            <td><strong>Clear visual hierarchy / prominent buttons</strong></td>
+            <td>Use consistent primary buttons with labels such as “Continue” and “Back,” and make clickable date/time options visually distinct.</td>
+            <td>Makes important actions easier to recognize and reduces uncertainty about what is clickable.</td>
+          </tr>
+          <tr>
+            <td>US3 – Form errors</td>
+            <td><strong>Inline Validation</strong></td>
+            <td>Validate the contact number immediately and display an error message beside the field.</td>
+            <td>Allows users to correct mistakes before proceeding.</td>
+          </tr>
+          <tr>
+            <td>US4 – Information overload</td>
+            <td><strong>Progressive Disclosure</strong></td>
+            <td>Place detailed requirements and additional instructions inside expandable sections.</td>
+            <td>Reduces unnecessary information on the main screen while keeping details available.</td>
+          </tr>
+          <tr>
+            <td>US4 – Organization</td>
+            <td><strong>Grouped Fields / Card Sectioning</strong></td>
+            <td>Separate appointment location, date/time, and personal information into clear sections.</td>
+            <td>Makes the appointment process easier to scan and understand.</td>
+          </tr>
+          <tr>
+            <td>US5 – Date/time selection</td>
+            <td><strong>Grouped Fields / Card Sectioning</strong></td>
+            <td>Display available dates and time slots as clearly bordered selectable cards/buttons.</td>
+            <td>Makes available choices visually obvious and easier to select.</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
     <section>
       <h2>Open-Source Resource Evaluation</h2>
-      <div class="placeholder">To be completed in Milestone 3.</div>
+      <p class="note">
+        We evaluated two UI kits and two icon libraries using the assignment criteria:
+        license, quality/maintenance, and fit to our user stories. We selected one UI kit and one
+        icon library for the prototype.
+      </p>
+
+      <div class="table-wrap">
+        <table class="matrix-table">
+          <tr>
+            <th>Resource</th>
+            <th>Type</th>
+            <th>License</th>
+            <th>Quality / Maintenance</th>
+            <th>Fit to Our User Stories</th>
+            <th>Decision</th>
+          </tr>
+          <tr>
+            <td>Bootstrap</td>
+            <td>UI Kit</td>
+            <td>MIT</td>
+            <td>Mature framework with extensive documentation and commonly used interface components.</td>
+            <td>Strong fit for buttons, forms, cards, validation states, responsive layout, and navigation.</td>
+            <td><strong>Selected</strong></td>
+          </tr>
+          <tr>
+            <td>Bulma</td>
+            <td>UI Kit</td>
+            <td>MIT</td>
+            <td>Responsive CSS framework with a component-based approach.</td>
+            <td>Good fit for forms, buttons, cards, and responsive layouts needed by the redesign.</td>
+            <td>Not selected</td>
+          </tr>
+          <tr>
+            <td>Lucide</td>
+            <td>Icon Library</td>
+            <td>ISC</td>
+            <td>Lightweight SVG icon set suitable for interface controls.</td>
+            <td>Strong fit for calendar, clock, location, user, check, warning, and navigation icons.</td>
+            <td><strong>Selected</strong></td>
+          </tr>
+          <tr>
+            <td>Font Awesome</td>
+            <td>Icon Library</td>
+            <td>Multiple licenses depending on asset</td>
+            <td>Large icon ecosystem with established web integration.</td>
+            <td>Good fit for common interface icons, but its licensing structure is more complicated for this student prototype.</td>
+            <td>Not selected</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="decision-card">
+        <strong>Final resource choice:</strong> Bootstrap will be used as the primary UI kit and Lucide
+        will be used for interface icons. These choices were made based on the resources' fit with the
+        controls required by US1–US5 and their suitability for a self-contained browser prototype.
+      </div>
     </section>
 
     <section>
       <h2>Tool-Selection Justification</h2>
-      <div class="placeholder">To be completed in Milestone 3.</div>
+      <table>
+        <tr><th>Project Activity</th><th>Tool</th><th>Why It Fits</th></tr>
+        <tr>
+          <td>User recruitment / communication</td>
+          <td>Messenger</td>
+          <td>Convenient for contacting users and arranging short conversations.</td>
+        </tr>
+        <tr>
+          <td>User interviews</td>
+          <td>Messenger voice/video call or chat</td>
+          <td>Allows the pair to ask the Appendix D questions and record concise interview notes.</td>
+        </tr>
+        <tr>
+          <td>Sketching / wireframing</td>
+          <td>Figma</td>
+          <td>Supports quick wireframes, screen layouts, and labeled callouts before implementation.</td>
+        </tr>
+        <tr>
+          <td>Building</td>
+          <td>Visual Studio Code</td>
+          <td>Supports direct HTML, CSS, and JavaScript editing for the required self-contained file.</td>
+        </tr>
+        <tr>
+          <td>Testing</td>
+          <td>Google Chrome</td>
+          <td>Provides a browser environment for checking layout and interactions in the HTML prototype.</td>
+        </tr>
+      </table>
     </section>
 
     <section>
       <h2>Annotated Wireframe</h2>
-      <div class="placeholder">To be completed in Milestone 3.</div>
+      <p class="note">
+        These rough wireframes show the first two redesign screens planned for Milestone 4.
+        Each callout is explicitly connected to a user story.
+      </p>
+
+      <h3>Screen 1 — Appointment Date &amp; Time</h3>
+      <div class="wireframe">
+        <div class="wf-header">DFA PASSPORT APPOINTMENT</div>
+
+        <div class="wf-stepper">
+          <span class="wf-step done">✓ Location</span>
+          <span>→</span>
+          <span class="wf-step active">● Date &amp; Time</span>
+          <span>→</span>
+          <span class="wf-step">3 Personal Info</span>
+          <span>→</span>
+          <span class="wf-step">4 Review</span>
+        </div>
+
+        <div class="note"><strong>STEP 2 OF 4</strong></div>
+
+        <div class="wf-panel">
+          <h3>Select Appointment Date</h3>
+          <p class="note">September 2026</p>
+          <div class="wf-grid">
+            <div class="wf-option unavailable"><strong>Sep 28</strong><br><small>FULL</small></div>
+            <div class="wf-option unavailable"><strong>Sep 29</strong><br><small>FULL</small></div>
+            <div class="wf-option available"><strong>Sep 30</strong><br><small>8 slots</small></div>
+            <div class="wf-option available"><strong>Oct 1</strong><br><small>5 slots</small></div>
+          </div>
+        </div>
+
+        <div class="wf-panel">
+          <h3>Available Time</h3>
+          <div class="wf-time-grid">
+            <div class="wf-option available">9:00 AM</div>
+            <div class="wf-option available">10:00 AM</div>
+            <div class="wf-option available">11:00 AM</div>
+          </div>
+        </div>
+
+        <div class="wf-actions">
+          <span class="wf-button">Back</span>
+          <span class="wf-button primary">Continue →</span>
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 1 — US1 / Stepper:</strong>
+          The stepper shows the applicant's current position and remaining steps so first-time users
+          know what to expect.
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 2 — US5 / Clear selection controls:</strong>
+          Available dates and time slots are presented as clearly bordered selectable cards so users
+          can distinguish available options from unavailable ones.
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 3 — US2:</strong>
+          A prominent labeled primary button makes the next action immediately recognizable.
+        </div>
+      </div>
+
+      <h3>Screen 2 — Personal Information</h3>
+      <div class="wireframe">
+        <div class="wf-header">DFA PASSPORT APPOINTMENT</div>
+
+        <div class="wf-stepper">
+          <span class="wf-step done">✓ Location</span>
+          <span>→</span>
+          <span class="wf-step done">✓ Date &amp; Time</span>
+          <span>→</span>
+          <span class="wf-step active">● Personal</span>
+          <span>→</span>
+          <span class="wf-step">4 Review</span>
+        </div>
+
+        <div class="note"><strong>STEP 3 OF 4</strong></div>
+
+        <div class="wf-panel">
+          <h3>Applicant Information</h3>
+          <label>First Name</label>
+          <div class="wf-input">Juan</div>
+
+          <label>Last Name</label>
+          <div class="wf-input">Dela Cruz</div>
+        </div>
+
+        <div class="wf-panel">
+          <h3>Contact Information</h3>
+          <label>Mobile Number</label>
+          <div class="wf-input error">0912345678</div>
+          <div class="wf-error">⚠ Please enter a valid 11-digit number.</div>
+        </div>
+
+        <div class="wf-actions">
+          <span class="wf-button">← Back</span>
+          <span class="wf-button primary">Continue →</span>
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 1 — US3 / Inline Validation:</strong>
+          The contact number is validated immediately and the error message appears beside the field,
+          allowing the user to correct the mistake before continuing.
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 2 — US4 / Grouped Fields:</strong>
+          Related information is grouped into sections so users do not have to process one long list
+          of fields.
+        </div>
+
+        <div class="callout">
+          <strong>CALL OUT 3 — US1 / Stepper:</strong>
+          The progress indicator remains visible so users can understand where they are in the
+          appointment process.
+        </div>
+      </div>
     </section>
 
     <section>
