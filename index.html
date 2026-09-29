@@ -75,11 +75,6 @@
   }
   section h3 { font-size: 1rem; margin: 18px 0 8px; }
 
-  #designlog p,
-  #designlog li {
-  text-align: justify;
-}
-
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
   th, td { border: 1px solid var(--border); padding: 9px 11px; text-align: left; vertical-align: top; }
@@ -759,8 +754,8 @@
         </p>
 
         <p>
-          <strong>Tool decisions:</strong> We used Messenger for user communication and interviews, Figma
-          for wireframing and annotation, Visual Studio Code for building the HTML/CSS/JavaScript prototype,
+          <strong>Tool decisions:</strong> We used Messenger for user communication and interviews, HTML and CSS
+          in Visual Studio Code for wireframing and annotation, Visual Studio Code for building the HTML/CSS/JavaScript prototype,
           and Google Chrome for testing.
         </p>
 
@@ -773,52 +768,64 @@
       </div>
 
       <div class="log-entry">
-  <h3>Entry #3 – Building the Prototype</h3>
-    <p class="date">September 29, 2026 · Milestone 4</p>
+        <h3>Entry #3 – Building the prototype</h3>
+        <p class="date">September 29, 2026 · Milestone 4</p>
+
   
-    <p>
-      <strong>Changes while building:</strong>
-      While building the prototype, we made some changes from our original wireframe to make the
-      appointment process clearer and more functional. We added four main steps:
-      <strong>Site Location, Date &amp; Time, Personal Info, and Review</strong>. We also added a
-      final confirmation screen after the user completes the process. The stepper now shows the
-      current step, completed steps, and “Step X of 4” to address US1. For US2, we kept one clear
-      primary <strong>Continue</strong> button at the bottom of each step and added a message that
-      tells the user what is still missing before they can continue. For US4, we organized related
-      information into separate cards and made the requirements expandable instead of showing all
-      the details at once. We also improved the date and time selection for US5 by showing available
-      slots, disabling fully booked options, and only showing time slots after a date is selected.
-      A review screen with <strong>Edit</strong> buttons was also added so users can check and
-      correct their information before confirming.
-    </p>
+        <p>
+          <strong>Changes while building:</strong>
+          While building the prototype, we made some changes from our original wireframe to make the
+          appointment process clearer and more functional. We added four main steps:
+          <strong>Site Location, Date &amp; Time, Personal Info, and Review</strong>. We also added a
+          final confirmation screen after the user completes the process. The stepper now shows the
+          current step, completed steps, and “Step X of 4” to address US1. For US2, we kept one clear
+          primary <strong>Continue</strong> button at the bottom of each step and added a message that
+          tells the user what is still missing before they can continue. For US4, we organized related
+          information into separate cards and made the requirements expandable instead of showing all
+          the details at once. We also improved the date and time selection for US5 by showing available
+          slots, disabling fully booked options, and only showing time slots after a date is selected.
+          A review screen with <strong>Edit</strong> buttons was also added so users can check and
+          correct their information before confirming.
+        </p>
+      
+        <p>
+          <strong>Problems we encountered:</strong>
+          One problem was keeping the prototype simple while still making all five user stories
+          functional. The appointment process contains several types of information, so putting
+          everything on one screen would make the page long and crowded. Another problem was making
+          it clear why the user could not continue when required information was missing. We also
+          needed a way to show form errors immediately without displaying error messages before the
+          user had a chance to enter their information. For the date and time section, we needed to
+          clearly separate available, selected, and fully booked options.
+        </p>
+      
+        <p>
+          <strong>How we resolved them:</strong>
+          We divided the appointment process into separate steps and used the
+          <strong>Stepper</strong> pattern so only the information needed for the current step is shown.
+          We added grouped cards and <strong>Progressive Disclosure</strong> to reduce the amount of
+          information visible at one time. Instead of simply preventing the user from continuing, the
+          prototype displays a short message explaining what information is still required. For the
+          personal information form, we used <strong>Inline Validation</strong> so an error appears near
+          the field after the user interacts with it, such as when the mobile number does not contain
+          11 digits or does not start with 09. For appointment schedules, available dates and times are
+          clickable, selected options are highlighted, and fully booked options are disabled. We used
+          Bootstrap components and custom CSS/JavaScript together because Bootstrap provided useful
+          form, button, accordion, and responsive styles, while custom code was needed for the stepper
+          and appointment-selection behavior.
+        </p>
   
-    <p>
-      <strong>Problems we encountered:</strong>
-      One problem was keeping the prototype simple while still making all five user stories
-      functional. The appointment process contains several types of information, so putting
-      everything on one screen would make the page long and crowded. Another problem was making
-      it clear why the user could not continue when required information was missing. We also
-      needed a way to show form errors immediately without displaying error messages before the
-      user had a chance to enter their information. For the date and time section, we needed to
-      clearly separate available, selected, and fully booked options.
-    </p>
-  
-    <p>
-      <strong>How we resolved them:</strong>
-      We divided the appointment process into separate steps and used the
-      <strong>Stepper</strong> pattern so only the information needed for the current step is shown.
-      We added grouped cards and <strong>Progressive Disclosure</strong> to reduce the amount of
-      information visible at one time. Instead of simply preventing the user from continuing, the
-      prototype displays a short message explaining what information is still required. For the
-      personal information form, we used <strong>Inline Validation</strong> so an error appears near
-      the field after the user interacts with it, such as when the mobile number does not contain
-      11 digits or does not start with 09. For appointment schedules, available dates and times are
-      clickable, selected options are highlighted, and fully booked options are disabled. We used
-      Bootstrap components and custom CSS/JavaScript together because Bootstrap provided useful
-      form, button, accordion, and responsive styles, while custom code was needed for the stepper
-      and appointment-selection behavior.
-    </p>
-  </div>
+
+      <!-- TEMPLATE – copy this for Entry #4 (validation). Use the real date you talk to the users.
+      <div class="log-entry">
+        <h3>Entry #4 – Validation with new users</h3>
+        <p class="date">September __, 2026 · Milestone 5</p>
+        <p><strong>Who we tested with:</strong> two users who were NOT in Round 1 (describe by role only) ...</p>
+        <p><strong>Task we gave them:</strong> ...</p>
+        <p><strong>What worked:</strong> ...</p>
+        <p><strong>What did not work / was confusing:</strong> ...</p>
+      </div>
+      -->
     </section>
 
     <section>
@@ -1029,9 +1036,11 @@
         </tr>
         <tr>
           <td>Sketching / wireframing</td>
-          <td>Figma</td>
-          <td>Free, and both of us can edit the same file at the same time. Easy to add labeled
-            callouts next to each screen.</td>
+          <td>HTML + CSS in Visual Studio Code, with a handwriting font (Patrick Hand, Google Fonts).
+            The sketch code was written with help from Claude Code (AI assistant).</td>
+          <td>The sketch lives inside our one HTML file, so we do not need extra image files and it opens in any browser.
+            It is easy to change when the design changes, and the numbered red callouts link each part of the
+            screen to a user story.</td>
         </tr>
         <tr>
           <td>Building</td>
