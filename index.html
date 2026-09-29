@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lab 3 – DFA Passport Appointment Redesign</title>
+<!-- UI kit: Bootstrap 5.3.8 (MIT) from jsDelivr CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
 <style>
   :root {
     --navy: #1f3a68;
@@ -14,6 +16,7 @@
     --text: #22262e;
     --muted: #5f6673;
     --border: #d6dbe3;
+    --pending: #fffbea;
   }
   * { box-sizing: border-box; }
   body {
@@ -108,7 +111,8 @@
   summary { cursor: pointer; font-weight: 600; }
   details ul { margin: 8px 0 4px; padding-left: 20px; }
 
-  .placeholder {
+  /* Named "todo-box" (not "placeholder") because Bootstrap already has a .placeholder class */
+  .todo-box {
     background: var(--pending);
     border: 1px dashed var(--gold);
     border-radius: 6px;
@@ -278,6 +282,173 @@
     .wf-time-grid { grid-template-columns: 1fr; }
   }
 
+  /* Icons (Lucide) */
+  svg.lucide { width: 18px; height: 18px; flex-shrink: 0; vertical-align: -3px; }
+  .tab-btn { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ===================== PROTOTYPE ===================== */
+  .proto-intro {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap; max-width: 760px; margin: 0 auto 14px;
+  }
+  .proto-app {
+    max-width: 760px; margin: 0 auto; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .proto-top {
+    background: var(--navy); color: #fff; padding: 12px 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .proto-top small { color: #cfd8e8; margin-left: auto; }
+  .proto-body { padding: 20px; }
+
+  /* Story labels – shows which user story each part answers */
+  .us-label {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    color: #7a5d00; background: #fff3c4; border: 1px solid var(--gold);
+    border-radius: 10px; padding: 1px 8px; margin-bottom: 6px;
+  }
+  body.hide-us .us-label { display: none; }
+
+  /* Stepper (US1) – Bootstrap has no stepper, so this is custom */
+  .stepper { list-style: none; display: flex; padding: 0; margin: 0 0 6px; }
+  .stepper li { flex: 1; position: relative; text-align: center; }
+  .stepper li::before {
+    content: ""; position: absolute; top: 17px; left: -50%;
+    width: 100%; height: 3px; background: var(--border); z-index: 0;
+  }
+  .stepper li:first-child::before { display: none; }
+  .stepper li.done::before, .stepper li.current::before { background: var(--navy); }
+  .step-btn {
+    position: relative; z-index: 1; background: none; border: 0; padding: 0; width: 100%;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--muted); font-size: 0.85rem; cursor: default;
+  }
+  .step-dot {
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
+    background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .stepper li.current .step-dot { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .stepper li.current .step-btn { color: var(--navy); font-weight: 700; }
+  .stepper li.done .step-dot { background: var(--navy-light); border-color: var(--navy); color: var(--navy); }
+  .stepper li.done .step-btn { color: var(--text); cursor: pointer; }
+  .stepper li.done .step-btn:not(:disabled):hover .step-label { text-decoration: underline; }
+  .step-count { text-align: center; color: var(--muted); font-size: 0.9rem; margin: 4px 0 18px; }
+
+  .proto-step { display: none; }
+  .proto-step.active { display: block; }
+  .proto-title { font-size: 1.25rem; font-weight: 700; color: var(--navy); margin: 0 0 4px; }
+  .proto-title:focus { outline: none; }
+  .proto-sub { color: var(--muted); margin-bottom: 16px; }
+
+  /* Grouped cards (US4) */
+  .group-card {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 14px; background: #fff;
+  }
+  .group-card h3 {
+    font-size: 1rem; font-weight: 700; margin: 0 0 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .small-note { font-size: 0.82rem; color: var(--muted); margin: 8px 0 0; }
+  .empty-hint {
+    background: var(--bg); color: var(--muted); border-radius: 6px;
+    padding: 12px; text-align: center; font-size: 0.92rem;
+  }
+  .accordion-button { font-size: 0.95rem; gap: 8px; padding: 10px 14px; }
+
+  /* Choice cards (application type) */
+  .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .choice {
+    width: 100%; text-align: left; background: #fff; padding: 12px;
+    border: 2px solid var(--border); border-radius: 8px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .choice:hover { border-color: var(--navy); }
+  .choice.selected { border-color: var(--navy); background: var(--navy-light); }
+  .choice strong { display: block; }
+  .choice small { color: var(--muted); }
+
+  /* Date and time cards (US5) */
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+  .legend span::before {
+    content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 5px;
+    vertical-align: -1px; border: 2px solid var(--navy); border-radius: 3px;
+  }
+  .legend .lg-selected::before { background: var(--navy); }
+  .legend .lg-full::before { border: 2px dashed #aeb4be; background: #f1f2f4; }
+  .date-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }  /* 5 columns = Mon to Fri */
+  .office-info {
+    margin-top: 10px; padding: 10px 12px; border-radius: 6px;
+    background: var(--bg); font-size: 0.9rem; line-height: 1.45;
+  }
+  .office-info div { display: flex; gap: 6px; }
+  .office-info svg.lucide { width: 15px; height: 15px; margin-top: 3px; color: var(--muted); }
+  .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .slot {
+    width: 100%; padding: 10px 6px; text-align: center; line-height: 1.3;
+    background: #fff; border: 2px solid var(--navy); border-radius: 8px;
+  }
+  .slot small { display: block; font-size: 0.8rem; color: var(--muted); }
+  .slot:hover:not(:disabled) { background: var(--navy-light); }
+  .slot.selected, .slot.selected:hover { background: var(--navy); color: #fff; }
+  .slot.selected small { color: #dfe7f3; }
+  .slot:disabled {
+    background: #f1f2f4; color: #9aa1ac; border: 2px dashed #aeb4be; cursor: not-allowed;
+  }
+
+  /* Form fields (US3) */
+  .form-label { font-weight: 600; margin-bottom: 4px; }
+  .form-label .opt { font-weight: 400; color: var(--muted); }
+  .field-help { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+  .invalid-feedback { align-items: center; gap: 5px; }
+  .is-invalid ~ .invalid-feedback { display: flex; }
+  .invalid-feedback svg.lucide { width: 15px; height: 15px; }
+
+  /* Review (step 4) */
+  .review-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+  .review-row:last-child { border-bottom: 0; }
+  .review-row span:first-child { color: var(--muted); }
+  .review-row span:last-child { font-weight: 600; text-align: right; }
+  .group-card .edit-btn { margin-left: auto; font-size: 0.85rem; }
+
+  /* Done screen */
+  .done-box { text-align: center; padding: 16px 6px; }
+  .done-box > svg.lucide { width: 56px; height: 56px; color: #1e7b45; }
+  .ref-no {
+    display: inline-block; font-family: Consolas, monospace; font-size: 1.15rem;
+    background: var(--navy-light); color: var(--navy); padding: 6px 14px; border-radius: 6px;
+  }
+  .done-box ul { text-align: left; display: inline-block; margin: 6px 0 0; }
+
+  /* Bottom buttons (US2) */
+  .proto-nav {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    border-top: 1px solid var(--border); padding-top: 16px;
+  }
+  .nav-right { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+  .nav-hint { flex: 1; text-align: right; font-size: 0.88rem; color: var(--muted); }
+  .nav-hint.warn { color: #b42318; font-weight: 600; }
+  .proto-app .btn { display: inline-flex; align-items: center; gap: 6px; }
+  .proto-app .btn-primary {
+    --bs-btn-bg: var(--navy); --bs-btn-border-color: var(--navy);
+    --bs-btn-hover-bg: #172d52; --bs-btn-hover-border-color: #172d52;
+    --bs-btn-active-bg: #12243f; --bs-btn-active-border-color: #12243f;
+  }
+  .proto-app .btn-primary.is-blocked { opacity: 0.55; }
+
+  @media (max-width: 600px) {
+    .proto-body { padding: 14px; }
+    .choice-grid { grid-template-columns: 1fr; }
+    .date-grid, .time-grid { grid-template-columns: repeat(2, 1fr); }
+    .step-label { font-size: 0.72rem; }
+    .proto-top small { display: none; }
+    .proto-nav { flex-wrap: wrap; }
+    .nav-right { flex-basis: 100%; flex-wrap: wrap; }
+    .nav-hint { flex-basis: 100%; }
+    .nav-right .btn { width: 100%; justify-content: center; }
+  }
+
 </style>
 </head>
 <body>
@@ -286,26 +457,181 @@
   <h1>DFA Passport Appointment System – Redesign</h1>
   <p>IT 114: Advance Human-Computer Interaction · Laboratory Activity 3 · User-Story-Driven Redesign</p>
   <nav class="tabs" role="tablist">
-    <button class="tab-btn" role="tab" data-view="prototype">Prototype</button>
-    <button class="tab-btn active" role="tab" data-view="designlog">Design Log</button>
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="prototype" data-view="prototype"><i data-lucide="eye"></i> Prototype</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="designlog" data-view="designlog"><i data-lucide="notebook-pen"></i> Design Log</button>
   </nav>
 </header>
 
 <main>
 
   <!-- ===================== PROTOTYPE VIEW ===================== -->
-  <div class="view" id="prototype">
-    <section>
-      <h2>Prototype</h2>
-      <div class="placeholder">
-        The interactive redesign will be built here in Milestone 4, based on the user stories
-        and design patterns recorded in the Design Log.
+  <!-- The dates, offices and requirements shown here come from the
+       "PROTOTYPE DATA" part of the <script> at the bottom of this file. -->
+  <div class="view active" id="prototype" role="tabpanel">
+
+    <div class="proto-intro">
+      <p class="note mb-0">A working redesign of part of the passport.gov.ph booking: site, date and time, and personal/contact info.
+        Family and application info are left out to keep the scope small. Sample data only – no real appointment is made.</p>
+      <div class="form-check form-switch mb-0">
+        <input class="form-check-input" type="checkbox" role="switch" id="toggleLabels" checked>
+        <label class="form-check-label" for="toggleLabels">Show user story labels</label>
       </div>
-    </section>
+    </div>
+
+    <div class="proto-app shadow-sm">
+      <div class="proto-top">
+        <i data-lucide="badge-check"></i>
+        <strong>DFA Passport Appointment</strong>
+        <small>Redesign prototype</small>
+      </div>
+
+      <div class="proto-body">
+
+        <!-- Stepper (US1) -->
+        <span class="us-label">US1 · Stepper</span>
+        <ol class="stepper" id="stepper"></ol>
+        <p class="step-count" id="stepCount"></p>
+
+        <!-- ---------- STEP 1: Site Location ---------- -->
+        <div class="proto-step" data-step="1">
+          <h2 class="proto-title" tabindex="-1">Where and what for?</h2>
+          <p class="proto-sub">Choose your application type and the DFA site you want to visit.</p>
+
+          <span class="us-label">US4 · Grouped cards</span>
+          <div class="group-card">
+            <h3><i data-lucide="file-text"></i> Application type</h3>
+            <div class="choice-grid" id="typeOptions"></div>
+          </div>
+
+          <div class="group-card">
+            <h3><i data-lucide="map-pin"></i> DFA site</h3>
+            <label class="visually-hidden" for="officeSelect">DFA site</label>
+            <select class="form-select" id="officeSelect"></select>
+            <div id="officeInfo"></div>
+          </div>
+
+          <span class="us-label">US4 · Progressive disclosure</span>
+          <div class="group-card">
+            <h3><i data-lucide="list-checks"></i> What to bring</h3>
+            <div id="reqArea"></div>
+          </div>
+        </div>
+
+        <!-- ---------- STEP 2: Date & Time ---------- -->
+        <div class="proto-step" data-step="2">
+          <h2 class="proto-title" tabindex="-1">Pick a date and time</h2>
+          <p class="proto-sub">Only open dates can be clicked. After you pick a date, its open times will show.</p>
+
+          <span class="us-label">US5 · Selectable date cards</span>
+          <div class="group-card">
+            <h3><i data-lucide="calendar-days"></i> Date <span class="note fw-normal ms-1" id="monthLabel"></span></h3>
+            <p class="small-note mt-0 mb-2" id="earliest"></p>
+            <div class="legend">
+              <span>Open</span><span class="lg-selected">Selected</span><span class="lg-full">Fully booked</span>
+            </div>
+            <div class="date-grid" id="dateGrid"></div>
+          </div>
+
+          <span class="us-label">US5 · Progressive disclosure (times after date)</span>
+          <div class="group-card">
+            <h3><i data-lucide="clock"></i> Time</h3>
+            <div id="timeArea"></div>
+          </div>
+        </div>
+
+        <!-- ---------- STEP 3: Personal Info ---------- -->
+        <div class="proto-step" data-step="3">
+          <h2 class="proto-title" tabindex="-1">Your information</h2>
+          <p class="proto-sub">Type your details as they appear on your birth certificate or passport.</p>
+
+          <form id="personForm" novalidate>
+            <span class="us-label">US4 · Grouped fields</span>
+            <div class="group-card">
+              <h3><i data-lucide="user"></i> Your name</h3>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label" for="f-first">First name</label>
+                  <input class="form-control" id="f-first" data-field="first" autocomplete="given-name">
+                  <div class="invalid-feedback"><i data-lucide="circle-alert"></i><span class="msg"></span></div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="f-middle">Middle name <span class="opt">(optional)</span></label>
+                  <input class="form-control" id="f-middle" data-field="middle" autocomplete="additional-name">
+                  <div class="invalid-feedback"><i data-lucide="circle-alert"></i><span class="msg"></span></div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="f-last">Last name</label>
+                  <input class="form-control" id="f-last" data-field="last" autocomplete="family-name">
+                  <div class="invalid-feedback"><i data-lucide="circle-alert"></i><span class="msg"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <span class="us-label">US3 · Inline validation</span>
+            <div class="group-card">
+              <h3><i data-lucide="phone"></i> Contact details</h3>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="f-mobile">Mobile number</label>
+                  <input class="form-control" id="f-mobile" data-field="mobile" type="tel" inputmode="numeric"
+                         placeholder="0917 123 4567" autocomplete="tel">
+                  <div class="invalid-feedback"><i data-lucide="circle-alert"></i><span class="msg"></span></div>
+                  <div class="field-help">11 digits, starts with 09</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="f-email">Email</label>
+                  <input class="form-control" id="f-email" data-field="email" type="email"
+                         placeholder="name@gmail.com" autocomplete="email">
+                  <div class="invalid-feedback"><i data-lucide="circle-alert"></i><span class="msg"></span></div>
+                  <div class="field-help">We send your confirmation here</div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- ---------- STEP 4: Review ---------- -->
+        <div class="proto-step" data-step="4">
+          <h2 class="proto-title" tabindex="-1">Check your details</h2>
+          <p class="proto-sub">If something is wrong, click “Edit” to go back to that step.</p>
+          <div id="reviewArea"></div>
+        </div>
+
+        <!-- ---------- DONE ---------- -->
+        <div class="proto-step" data-step="5">
+          <div class="done-box">
+            <i data-lucide="circle-check"></i>
+            <h2 class="proto-title mt-2" tabindex="-1">Your appointment is booked</h2>
+            <p class="mb-2">Reference number:</p>
+            <p><span class="ref-no" id="refNo"></span></p>
+            <p id="doneSummary"></p>
+            <p class="mb-0"><strong>Bring these on the day:</strong></p>
+            <ul id="doneBring"></ul>
+            <p class="note mt-3">This is a class prototype. No real appointment was made.</p>
+            <button type="button" class="btn btn-outline-secondary" id="restartBtn">
+              <i data-lucide="rotate-ccw"></i> Book another appointment
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom buttons (US2) -->
+        <div class="proto-nav" id="protoNav">
+          <button type="button" class="btn btn-outline-secondary" id="backBtn">
+            <i data-lucide="arrow-left"></i> Back
+          </button>
+          <div class="nav-right">
+            <span class="nav-hint" id="navHint" aria-live="polite"></span>
+            <span class="us-label mb-0">US2 · One clear main button</span>
+            <button type="button" class="btn btn-primary btn-lg" id="nextBtn"></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <!-- ===================== DESIGN LOG VIEW ===================== -->
-  <div class="view active" id="designlog">
+  <div class="view" id="designlog" role="tabpanel">
 
     <!-- (a) Primary user + user stories -->
     <section>
@@ -323,8 +649,8 @@
         </tr>
         <tr>
           <td>Returning applicant</td>
-          <td>Has used the appointment system before (e.g., for renewal). Knows the general flow but still
-            has to read through long pages and re-enter the same personal details each time.</td>
+          <td>Has used the appointment system before (e.g., for renewal). Knows the general steps but still
+            has to read long pages and look around for the right buttons and links.</td>
         </tr>
       </table>
     </section>
@@ -343,8 +669,8 @@
           </tr>
           <tr>
             <td>US2</td>
-            <td class="story">As a passport applicant, I want important buttons and links to be clear and easy to notice, 
-              so that I can quickly find where to click and continue my appointment.</td>
+            <td class="story">As a passport applicant, I want the button for the next step to look clearly clickable and stand out from the text around it,
+              so that I do not have to search the page to find where to click next.</td>
             <td><span class="tag">User 1 · first-time</span><span class="tag">User 2 · first-time</span><span class="tag">User 3 · returning</span></td>
           </tr>
           <tr>
@@ -355,8 +681,8 @@
           </tr>
           <tr>
             <td>US4</td>
-            <td class="story">As a passport applicant, I want the information and instructions to be simple and organized, 
-              so that I can easily understand the requirements and what I need to do next.</td>
+            <td class="story">As a passport applicant, I want the requirements shown as a short list that I can open for more details only when I need them,
+              so that I do not have to read a long page before I can book.</td>
             <td><span class="tag">User 1 · first-time</span><span class="tag">User 2 · first-time</span><span class="tag">User 3 · returning</span></td>
           </tr>
           <tr>
@@ -372,7 +698,6 @@
     <!-- (b) Decision log -->
     <section>
       <h2>Decision Log</h2>
-      <p class="note">Milestone 2 and Milestone 3 decisions are recorded below in chronological order.</p>
 
       <div class="log-entry">
         <h3>Entry #1 – Primary user and user stories</h3>
@@ -439,6 +764,16 @@
           in Milestone 4.
         </p>
       </div>
+
+      <!-- TEMPLATE – copy this for Entry #3 (build) and Entry #4 (validation). Use the real date you did the work.
+      <div class="log-entry">
+        <h3>Entry #3 – Building the prototype</h3>
+        <p class="date">September __, 2026 · Milestone 4</p>
+        <p><strong>Changes while building:</strong> ...</p>
+        <p><strong>Problems we had:</strong> ...</p>
+        <p><strong>How we fixed them:</strong> ...</p>
+      </div>
+      -->
     </section>
 
     <section>
@@ -461,7 +796,6 @@
         <ul>
           <li>Came to apply for a passport, book an appointment, and check requirements.</li>
           <li>Wasn't always sure what to do next because of the amount of information.</li>
-          <li>Typed an extra digit in the contact number and the site did not flag it right away.</li>
           <li>Wished the site checked entries automatically before moving on.</li>
           <li>Would add clear error messages to the forms.</li>
         </ul>
@@ -472,7 +806,6 @@
         <ul>
           <li>Uses the site to book an appointment and check requirements.</li>
           <li>Even as a repeat user, still had to read a lot and look for buttons and links.</li>
-          <li>Wished the site remembered previous information and let them continue their appointment details.</li>
           <li>Would reduce text, make important buttons easier to see, and show progress.</li>
         </ul>
       </details>
@@ -487,78 +820,80 @@
       <h2>Design Pattern Mapping</h2>
     
       <p class="note">
-        Each pattern is selected to address a specific user story. The patterns will be implemented
-        functionally in the Milestone 4 prototype.
+        Each pattern is linked to a user story. You can see each one working in the Prototype tab.
+        Turn on “Show user story labels” to see which part answers which story.
       </p>
-    
+
       <div class="table-wrap">
         <table class="matrix-table">
           <tr>
             <th>User Story</th>
             <th>Design Pattern</th>
-            <th>How We Will Apply It</th>
-            <th>Rationale</th>
+            <th>How We Applied It</th>
+            <th>Why (from the interviews)</th>
           </tr>
-    
+
           <tr>
-            <td><strong>US1 — Clear Appointment Progress</strong></td>
+            <td><strong>US1 — See my progress</strong></td>
             <td><strong>Stepper</strong></td>
             <td>
-              Display the appointment steps in sequence:
-              Location → Date &amp; Time → Personal Information → Review.
+              Four steps are shown at the top: Site Location → Date &amp; Time → Personal Info → Review.
+              The current step is highlighted, finished steps get a check mark, and the text
+              “Step X of 4” is shown. Users can click a finished step to go back to it.
             </td>
             <td>
-              Shows the user's current step and the remaining steps during the appointment process.
+              Users said they did not know which step they were on or how many steps were left.
             </td>
           </tr>
-    
+
           <tr>
-            <td><strong>US2 — Clear and Noticeable Buttons</strong></td>
-            <td><strong>Progressive Disclosure</strong></td>
+            <td><strong>US2 — Clear main button</strong></td>
+            <td><strong>Clear primary action (visual hierarchy)</strong></td>
             <td>
-              Keep the page focused by showing important actions first and displaying additional
-              information only when needed.
+              Each step has only one main button (“Continue”) in a strong color, always in the same
+              place at the bottom right. “Back” is a lighter outline button. If something is still
+              missing, a short message next to the button says what to do.
             </td>
             <td>
-              Keeps the page focused by showing important actions first and additional information
-              only when needed.
+              Users said some buttons and links did not look clickable, so they had to look around the page.
             </td>
           </tr>
-    
+
           <tr>
-            <td><strong>US3 — Error Handling</strong></td>
+            <td><strong>US3 — Tell me right away when I make a mistake</strong></td>
             <td><strong>Inline Validation</strong></td>
             <td>
-              Immediately show the user when information is incorrect or incomplete and indicate what needs to be fixed.
+              Each field is checked when the user leaves it, and again while they fix it. The error
+              message shows right under the field in red (for example, “Mobile number must have
+              11 digits”). A correct field turns green.
             </td>
             <td>
-              Helps users identify and correct errors before continuing.
-            </td>
-          </tr>
-    
-          <tr>
-            <td><strong>US4 — Simple and Organized Information</strong></td>
-            <td><strong>Grouped Fields / Card Sectioning</strong></td>
-            <td>
-              Group related information and instructions into clear sections or cards, such as
-              appointment details, requirements, and personal information.
-            </td>
-            <td>
-              Groups related information into clear sections so the page is easier to read and
-              understand.
+              One user entered a wrong contact number and the website did not tell them right away.
             </td>
           </tr>
-    
+
           <tr>
-            <td><strong>US5 — Clear Date and Time Selection</strong></td>
-            <td><strong>Progressive Disclosure</strong></td>
+            <td><strong>US4 — Short, organized requirements</strong></td>
+            <td><strong>Grouped Fields / Card Sectioning</strong> + <strong>Progressive Disclosure</strong></td>
             <td>
-              Let the user choose an available date first, then display the available time slots
-              for the selected date.
+              Related things are put in separate cards (application type, office, requirements,
+              name, contact). The requirements show as a short list, and the details open only
+              when the user clicks an item.
             </td>
             <td>
-              Lets the user choose an available date first, then displays the available time slots
-              for that selected date.
+              Users said there was too much text on one page, so it was hard to find what they needed.
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>US5 — Clear dates and times</strong></td>
+            <td><strong>Selectable cards</strong> + <strong>Progressive Disclosure</strong></td>
+            <td>
+              Dates are shown as cards with the number of open slots. Full dates are grey and cannot
+              be clicked. After the user picks a date, the times for that date appear.
+            </td>
+            <td>
+              Users said finding an open date and time took extra effort when their preferred dates were full.
             </td>
           </tr>
         </table>
@@ -568,9 +903,8 @@
     <section>
       <h2>Open-Source Resource Evaluation</h2>
       <p class="note">
-        We evaluated two UI kits and two icon libraries using the assignment criteria:
-        license, quality/maintenance, and fit to our user stories. We selected one UI kit and one
-        icon library for the prototype.
+        We compared two UI kits and two icon libraries on three things: license, quality/maintenance,
+        and fit to our user stories. Versions and licenses were checked on npm/jsDelivr on September 29, 2026.
       </p>
 
       <div class="table-wrap">
@@ -586,42 +920,49 @@
           <tr>
             <td>Bootstrap</td>
             <td>UI Kit</td>
-            <td>MIT</td>
-            <td>Mature framework with extensive documentation and commonly used interface components.</td>
-            <td>Strong fit for buttons, forms, cards, validation states, responsive layout, and navigation.</td>
+            <td>MIT – free to use, even for commercial work. The license notice is already inside the CDN file.</td>
+            <td>Version 5.3.8. Very popular, with full documentation and many examples. Still updated.</td>
+            <td>Has ready-made parts we need: red/green form states (<code>is-invalid</code>, <code>invalid-feedback</code>) for US3,
+              cards and an accordion for US4, and strong button styles for US2. It has <em>no</em> stepper, so we built
+              the US1 stepper ourselves. Includes JavaScript, so the accordion works without extra code.</td>
             <td><strong>Selected</strong></td>
           </tr>
           <tr>
             <td>Bulma</td>
             <td>UI Kit</td>
-            <td>MIT</td>
-            <td>Responsive CSS framework with a component-based approach.</td>
-            <td>Good fit for forms, buttons, cards, and responsive layouts needed by the redesign.</td>
+            <td>MIT – free to use, even for commercial work.</td>
+            <td>Version 1.0.4. Clean, modern look and good documentation.</td>
+            <td>Has cards, buttons and red/green form styles (<code>is-danger</code>, <code>is-success</code>) for US2–US4.
+              But Bulma is CSS only (no JavaScript), so we would have to write the open/close requirements list (US4)
+              ourselves. It also has no stepper for US1.</td>
             <td>Not selected</td>
           </tr>
           <tr>
             <td>Lucide</td>
             <td>Icon Library</td>
-            <td>ISC</td>
-            <td>Lightweight SVG icon set suitable for interface controls.</td>
-            <td>Strong fit for calendar, clock, location, user, check, warning, and navigation icons.</td>
+            <td>ISC – works like MIT: free to use, no credit needed on the page.</td>
+            <td>Version 1.48.0. Updated often, more than 1,000 icons, all in one simple line style.</td>
+            <td>Has every icon we need: map-pin (office), calendar and clock (US5), check marks in the stepper (US1),
+              an alert icon for error messages (US3), and an arrow on the main button (US2).</td>
             <td><strong>Selected</strong></td>
           </tr>
           <tr>
-            <td>Font Awesome</td>
+            <td>Font Awesome Free</td>
             <td>Icon Library</td>
-            <td>Multiple licenses depending on asset</td>
-            <td>Large icon ecosystem with established web integration.</td>
-            <td>Good fit for common interface icons, but its licensing structure is more complicated for this student prototype.</td>
+            <td>Mixed: icons are CC BY 4.0 (you <em>must</em> give credit), fonts are SIL OFL 1.1, code is MIT.</td>
+            <td>Version 7.3.1. Very large and well known. Still updated.</td>
+            <td>Has all the icons we need too. But we would have to add a credit line for the icons, and
+              the mixed licenses are harder to follow than Lucide's single license.</td>
             <td>Not selected</td>
           </tr>
         </table>
       </div>
 
       <div class="decision-card">
-        <strong>Final resource choice:</strong> Bootstrap will be used as the primary UI kit and Lucide
-        will be used for interface icons. These choices were made based on the resources' fit with the
-        controls required by US1–US5 and their suitability for a self-contained browser prototype.
+        <strong>Final resource choice:</strong> We used Bootstrap as our UI kit and Lucide for icons, both loaded
+        from the jsDelivr CDN. Bootstrap won over Bulma because it already has the form error styles (US3) and the
+        working accordion (US4) we need. Lucide won over Font Awesome because it has one simple license with no
+        credit required, and all the icons our stories need.
       </div>
     </section>
 
@@ -630,29 +971,40 @@
       <table>
         <tr><th>Project Activity</th><th>Tool</th><th>Why It Fits</th></tr>
         <tr>
-          <td>User recruitment / communication</td>
+          <td>Finding and contacting users</td>
           <td>Messenger</td>
-          <td>Convenient for contacting users and arranging short conversations.</td>
+          <td>The people we asked were already on Messenger, so it was the fastest way to reach them
+            and set a time. We did not need to ask for an email or phone number.</td>
         </tr>
         <tr>
-          <td>User interviews</td>
+          <td>Interviews (Round 1)</td>
           <td>Messenger voice/video call or chat</td>
-          <td>Allows the pair to ask the Appendix D questions and record concise interview notes.</td>
+          <td>A call lets us ask follow-up questions after each Appendix D question. A survey form
+            cannot do that. Chat was a backup for users who were busy.</td>
         </tr>
         <tr>
           <td>Sketching / wireframing</td>
           <td>Figma</td>
-          <td>Supports quick wireframes, screen layouts, and labeled callouts before implementation.</td>
+          <td>Free, and both of us can edit the same file at the same time. Easy to add labeled
+            callouts next to each screen.</td>
         </tr>
         <tr>
           <td>Building</td>
           <td>Visual Studio Code</td>
-          <td>Supports direct HTML, CSS, and JavaScript editing for the required self-contained file.</td>
+          <td>Free, and good for editing one file that has HTML, CSS and JavaScript together.
+            No build step is needed, which the activity requires.</td>
         </tr>
         <tr>
           <td>Testing</td>
-          <td>Google Chrome</td>
-          <td>Provides a browser environment for checking layout and interactions in the HTML prototype.</td>
+          <td>Google Chrome (with DevTools)</td>
+          <td>DevTools shows JavaScript errors and lets us check how the prototype looks on a
+            phone-size screen.</td>
+        </tr>
+        <tr>
+          <td>Validating (Round 2)</td>
+          <td>In person on a laptop/phone, or Messenger video call with screen sharing <em>(planned – update after Milestone 5)</em></td>
+          <td>The user needs to try the prototype themselves and talk out loud while doing the task
+            (Appendix E). Screen sharing lets us watch where they get stuck.</td>
         </tr>
       </table>
     </section>
@@ -782,13 +1134,30 @@
 
     <section>
       <h2>Validation Feedback and Reflection</h2>
-      <div class="placeholder">To be completed in Milestone 5.</div>
+      <div class="todo-box">To be completed in Milestone 5.</div>
+      <!-- TEMPLATE – copy this when you fill in Milestone 5, then delete the todo-box above.
+      <h3>Feedback summary (Round 2 – different users from Round 1)</h3>
+      <table>
+        <tr><th>User</th><th>Task tried</th><th>What was confusing</th><th>Solves a real problem?</th><th>Easier (1–5) and why</th><th>One thing to change</th></tr>
+        <tr><td>User 4 – ___ applicant</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>User 5 – ___ applicant</td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <h3>Reflection – what we would do differently next sprint</h3>
+      <p>...</p>
+      -->
     </section>
 
   </div>
 </main>
 
-<footer>IT 114 · Laboratory Activity 3 · Class project – not affiliated with the Department of Foreign Affairs</footer>
+<footer>
+  IT 114 · Laboratory Activity 3 · Class project – not affiliated with the Department of Foreign Affairs<br>
+  Built with Bootstrap 5.3.8 (MIT) and Lucide 1.48.0 (ISC)
+</footer>
+
+<!-- Bootstrap JS (for the accordion) and Lucide icons, from jsDelivr CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
 
 <script>
   // Switch between Prototype and Design Log views
@@ -797,12 +1166,385 @@
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
+      buttons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
       views.forEach(v => v.classList.remove('active'));
       btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
       document.getElementById(btn.dataset.view).classList.add('active');
     });
   });
+
+  // ============================================================
+  //  PROTOTYPE DATA – EDIT HERE
+  //  Change these lists to change what the prototype shows.
+  // ============================================================
+
+  // Step names shown in the stepper (US1)
+  const STEPS = ["Site Location", "Date & Time", "Personal Info", "Review"];
+
+  // Application types (step 1). "icon" is a Lucide icon name (see lucide.dev/icons).
+  const APP_TYPES = [
+    { id: "new",   label: "New passport", note: "First time getting a passport", icon: "user" },
+    { id: "renew", label: "Renewal",      note: "You already have a passport",   icon: "rotate-ccw" }
+  ];
+
+  // DFA sites in the dropdown (step 1). Names are from the real passport.gov.ph site list.
+  // "address" and "phone" are shown after the user picks the site. Leave them "" if you don't know them –
+  // copy them from passport.gov.ph (they show when you pick the site there).
+  const OFFICES = [
+    { name: "Butuan (Robinsons Butuan)",
+      address: "DFA Regional Consular Office – Butuan, 3rd Level Robinsons Place Butuan, JC Aquino Ave., Butuan City 8600",
+      phone: "(085) 815-5571" },
+    { name: "Cagayan de Oro (BPO Tower SM Downtown Premier)", address: "", phone: "" },
+    { name: "Cebu (Robinsons Galleria, Cebu City)",           address: "", phone: "" },
+    { name: "DFA Manila (Aseana)",                            address: "", phone: "" },
+    { name: "DFA NCR East (SM Megamall, Mandaluyong City)",   address: "", phone: "" }
+  ];
+
+  // "What to bring" list for each application type (step 1, US4).
+  // Sample list for the prototype only – check the official DFA site for the real list.
+  const REQUIREMENTS = {
+    new: [
+      { title: "Printed appointment page", detail: "Print or save the page you get at the end of this booking." },
+      { title: "Filled-out application form", detail: "You can fill it out at the office, but bringing it done saves time." },
+      { title: "PSA birth certificate", detail: "Original copy printed on PSA security paper." },
+      { title: "One valid ID + photocopy", detail: "For example: PhilID, UMID, driver's license, or postal ID." }
+    ],
+    renew: [
+      { title: "Printed appointment page", detail: "Print or save the page you get at the end of this booking." },
+      { title: "Filled-out application form", detail: "You can fill it out at the office, but bringing it done saves time." },
+      { title: "Your current or old passport", detail: "Bring the passport itself plus a photocopy of the data page." }
+    ]
+  };
+
+  // Dates and times (step 2, US5).
+  // Based on what passport.gov.ph showed for Butuan: Oct 5–12 fully booked, Oct 13–16 open,
+  // one-hour time slots from 8:00 AM to 5:00 PM. Oct 13 uses the real slot counts; Oct 14–16 are sample numbers.
+  // The number after each time = open slots left. Use 0 for "Fully booked".
+  // If every time on a date is 0, the whole date shows as "Full".
+  const MONTH_LABEL = "October 2026";
+  const YEAR = 2026;
+  const HOLD_MINUTES = 30;   // the real site holds your chosen time slot for 30 minutes
+  const T = ["8:00 – 9:00 AM", "9:00 – 10:00 AM", "10:00 – 11:00 AM", "11:00 AM – 12:00 PM", "12:00 – 1:00 PM",
+             "1:00 – 2:00 PM", "2:00 – 3:00 PM", "3:00 – 4:00 PM", "4:00 – 5:00 PM"];
+  const slots = counts => Object.fromEntries(T.map((t, i) => [t, counts[i]]));   // pairs each time with its count
+  const FULL = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const DATES = [
+    { day: "Mon", date: "Oct 5",  times: slots(FULL) },
+    { day: "Tue", date: "Oct 6",  times: slots(FULL) },
+    { day: "Wed", date: "Oct 7",  times: slots(FULL) },
+    { day: "Thu", date: "Oct 8",  times: slots(FULL) },
+    { day: "Fri", date: "Oct 9",  times: slots(FULL) },
+    { day: "Mon", date: "Oct 12", times: slots(FULL) },
+    { day: "Tue", date: "Oct 13", times: slots([18, 3, 1, 0, 0, 0, 0, 1, 0]) },
+    { day: "Wed", date: "Oct 14", times: slots([12, 8, 5, 2, 0, 4, 6, 3, 1]) },
+    { day: "Thu", date: "Oct 15", times: slots([15, 10, 7, 4, 3, 6, 8, 5, 2]) },
+    { day: "Fri", date: "Oct 16", times: slots([20, 14, 9, 6, 5, 9, 11, 7, 4]) }
+  ];
+
+  // Form checks (step 3, US3). Each rule returns an error message, or "" if the value is OK.
+  const NAME_OK = /^[A-Za-zÑñ .'-]+$/;
+  const FIELDS = {
+    first:  { label: "First name", check: v => !v.trim() ? "Please enter your first name." : !NAME_OK.test(v) ? "Use letters only." : "" },
+    middle: { label: "Middle name", check: v => v.trim() && !NAME_OK.test(v) ? "Use letters only." : "" },
+    last:   { label: "Last name", check: v => !v.trim() ? "Please enter your last name." : !NAME_OK.test(v) ? "Use letters only." : "" },
+    mobile: { label: "Mobile number", check: v => {
+      const digits = v.replace(/[\s-]/g, "");
+      if (!digits) return "Please enter your mobile number.";
+      if (!/^\d+$/.test(digits)) return "Use numbers only.";
+      if (!digits.startsWith("09")) return "Mobile number must start with 09.";
+      if (digits.length !== 11) return `Mobile number must have 11 digits. You typed ${digits.length}.`;
+      return "";
+    }},
+    email:  { label: "Email", check: v => !v.trim() ? "Please enter your email." :
+              !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? "Check your email. Example: name@gmail.com" : "" }
+  };
+
+  // ============================================================
+  //  PROTOTYPE LOGIC – you usually do not need to change below
+  // ============================================================
+
+  const state = {
+    step: 1, type: null, office: "", dateIndex: null, time: null,
+    person: { first: "", middle: "", last: "", mobile: "", email: "" },
+    touched: {}, ref: ""
+  };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const refreshIcons = () => { if (window.lucide) lucide.createIcons(); };
+  const slotsLeft = d => Object.values(d.times).reduce((a, b) => a + b, 0);
+  const typeLabel = () => (APP_TYPES.find(t => t.id === state.type) || {}).label || "";
+  const fullName = () => [state.person.first, state.person.middle, state.person.last].filter(s => s.trim()).join(" ");
+
+  // ----- Stepper (US1) -----
+  function renderStepper() {
+    const finished = state.step > STEPS.length;
+    $("stepper").innerHTML = STEPS.map((name, i) => {
+      const n = i + 1;
+      const cls = n < state.step ? "done" : n === state.step ? "current" : "";
+      const canGo = n < state.step && !finished;
+      return `<li class="${cls}" ${n === state.step ? 'aria-current="step"' : ""}>
+        <button type="button" class="step-btn" data-go="${n}" ${canGo ? `title="Go back to ${name}"` : "disabled"}>
+          <span class="step-dot">${n < state.step ? '<i data-lucide="check"></i>' : n}</span>
+          <span class="step-label">${name}</span>
+        </button></li>`;
+    }).join("");
+    $("stepCount").textContent = finished ? "All steps done" : `Step ${state.step} of ${STEPS.length} – ${STEPS[state.step - 1]}`;
+  }
+
+  // ----- Step 1: type, office, requirements (US4) -----
+  function renderStep1() {
+    $("typeOptions").innerHTML = APP_TYPES.map(t => `
+      <button type="button" class="choice ${state.type === t.id ? "selected" : ""}" data-type="${t.id}" aria-pressed="${state.type === t.id}">
+        <i data-lucide="${t.icon}"></i>
+        <span><strong>${t.label}</strong><small>${t.note}</small></span>
+      </button>`).join("");
+
+    $("officeSelect").innerHTML = `<option value="">— Choose a site —</option>` +
+      OFFICES.map(o => `<option ${o.name === state.office ? "selected" : ""}>${esc(o.name)}</option>`).join("");
+    renderOfficeInfo();
+
+    if (!state.type) {
+      $("reqArea").innerHTML = `<div class="empty-hint">Choose an application type above to see what to bring.</div>`;
+    } else {
+      const items = REQUIREMENTS[state.type].map((r, i) => `
+        <div class="accordion-item">
+          <h4 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#req-${i}" aria-expanded="false" aria-controls="req-${i}">
+              <i data-lucide="check"></i> ${r.title}
+            </button>
+          </h4>
+          <div id="req-${i}" class="accordion-collapse collapse">
+            <div class="accordion-body">${r.detail}</div>
+          </div>
+        </div>`).join("");
+      $("reqArea").innerHTML = `<div class="accordion">${items}</div>
+        <p class="small-note">Click an item to see more details. Sample list for this prototype only.</p>`;
+    }
+  }
+
+  // Address and phone of the chosen site (only shown after a site is picked)
+  function renderOfficeInfo() {
+    const o = OFFICES.find(o => o.name === state.office);
+    $("officeInfo").innerHTML = !o || (!o.address && !o.phone) ? "" : `
+      <div class="office-info">
+        ${o.address ? `<div><i data-lucide="map-pin"></i><span>${esc(o.address)}</span></div>` : ""}
+        ${o.phone ? `<div><i data-lucide="phone"></i><span>${esc(o.phone)}</span></div>` : ""}
+      </div>`;
+  }
+
+  // ----- Step 2: dates, then times (US5) -----
+  function renderStep2() {
+    $("monthLabel").textContent = MONTH_LABEL;
+    const first = DATES.find(d => slotsLeft(d) > 0);
+    $("earliest").innerHTML = first
+      ? `Earliest open date: <strong>${first.day}, ${first.date}</strong>`
+      : `No open dates this month.`;
+    $("dateGrid").innerHTML = DATES.map((d, i) => {
+      const left = slotsLeft(d);
+      const sel = i === state.dateIndex;
+      return `<button type="button" class="slot ${sel ? "selected" : ""}" data-date="${i}" aria-pressed="${sel}" ${left ? "" : "disabled"}>
+        <strong>${d.day}, ${d.date}</strong><small>${left ? left + " slots left" : "Fully booked"}</small></button>`;
+    }).join("");
+
+    if (state.dateIndex === null) {
+      $("timeArea").innerHTML = `<div class="empty-hint">Pick a date first. The open times will show here.</div>`;
+    } else {
+      const d = DATES[state.dateIndex];
+      $("timeArea").innerHTML = `<p class="small-note mt-0 mb-2">Open times for <strong>${d.day}, ${d.date}</strong>:</p>
+        <div class="time-grid">` + Object.entries(d.times).map(([time, left]) => {
+          const sel = time === state.time;
+          return `<button type="button" class="slot ${sel ? "selected" : ""}" data-time="${time}" aria-pressed="${sel}" ${left ? "" : "disabled"}>
+            <strong>${time}</strong><small>${left ? left + " left" : "Fully booked"}</small></button>`;
+        }).join("") + `</div>` +
+        (state.time ? `<div class="alert alert-warning small d-flex gap-2 mt-3 mb-0 py-2">
+          <i data-lucide="info"></i><span>We hold <strong>${state.time}</strong> for you for ${HOLD_MINUTES} minutes while you finish booking.</span></div>` : "");
+    }
+  }
+
+  // ----- Step 3: inline validation (US3) -----
+  function validateField(key) {
+    const input = document.querySelector(`[data-field="${key}"]`);
+    const msg = FIELDS[key].check(input.value);
+    const show = state.touched[key];
+    input.classList.toggle("is-invalid", show && !!msg);
+    input.classList.toggle("is-valid", show && !msg && input.value.trim() !== "");
+    input.parentElement.querySelector(".msg").textContent = msg;
+    return msg;
+  }
+
+  // ----- Step 4: review -----
+  function renderReview() {
+    const d = DATES[state.dateIndex];
+    const group = (title, icon, step, rows) => `
+      <div class="group-card">
+        <h3><i data-lucide="${icon}"></i> ${title}
+          <button type="button" class="btn btn-link btn-sm edit-btn" data-go="${step}"><i data-lucide="pencil"></i> Edit</button>
+        </h3>
+        ${rows.map(([k, v]) => `<div class="review-row"><span>${k}</span><span>${esc(v)}</span></div>`).join("")}
+      </div>`;
+    $("reviewArea").innerHTML =
+      group("Site Location", "map-pin", 1, [["Application type", typeLabel()], ["DFA site", state.office]]) +
+      group("Date & time", "calendar-days", 2, [["Date", `${d.day}, ${d.date}, ${YEAR}`], ["Time", state.time]]) +
+      group("Your information", "user", 3, [["Name", fullName()], ["Mobile number", state.person.mobile], ["Email", state.person.email]]);
+  }
+
+  function renderDone() {
+    const d = DATES[state.dateIndex];
+    $("refNo").textContent = state.ref;
+    $("doneSummary").innerHTML = `${esc(state.office)}<br><strong>${d.day}, ${d.date}, ${YEAR} · ${state.time}</strong>`;
+    $("doneBring").innerHTML = REQUIREMENTS[state.type].map(r => `<li>${r.title}</li>`).join("");
+  }
+
+  // ----- What is still missing on this step? (used by the main button, US2) -----
+  function missingOnStep(step) {
+    const miss = [];
+    if (step === 1) {
+      if (!state.type) miss.push("choose an application type");
+      if (!state.office) miss.push("choose a DFA site");
+    }
+    if (step === 2) {
+      if (state.dateIndex === null) miss.push("pick a date");
+      if (!state.time) miss.push("pick a time");
+    }
+    if (step === 3) {
+      const bad = Object.keys(FIELDS).filter(k => FIELDS[k].check(state.person[k]));
+      if (bad.length) miss.push("complete or fix: " + bad.map(k => FIELDS[k].label).join(", "));
+    }
+    return miss;
+  }
+
+  function renderNav(warn) {
+    const step = state.step;
+    const miss = missingOnStep(step);
+    const next = $("nextBtn");
+    $("protoNav").style.display = step > STEPS.length ? "none" : "";
+    $("backBtn").style.display = step === 1 ? "none" : "";
+    next.innerHTML = step === STEPS.length
+      ? `<i data-lucide="check"></i> Confirm appointment`
+      : `Continue <i data-lucide="arrow-right"></i>`;
+    next.classList.toggle("is-blocked", miss.length > 0);
+    next.setAttribute("aria-disabled", miss.length > 0);
+
+    const hint = $("navHint");
+    hint.classList.toggle("warn", !!warn && miss.length > 0);
+    if (miss.length) {
+      const text = miss.join(" and ");
+      hint.textContent = "To continue, " + text + ".";
+    } else {
+      hint.textContent = step === STEPS.length ? "Check your details, then confirm." : "";
+    }
+  }
+
+  // ----- Draw the whole prototype for the current step -----
+  function render(moveFocus) {
+    renderStepper();
+    document.querySelectorAll(".proto-step").forEach(el =>
+      el.classList.toggle("active", Number(el.dataset.step) === state.step));
+    if (state.step === 1) renderStep1();
+    if (state.step === 2) renderStep2();
+    if (state.step === 4) renderReview();
+    if (state.step === 5) renderDone();
+    renderNav(false);
+    refreshIcons();
+
+    if (moveFocus) {
+      const app = document.querySelector(".proto-app");
+      if (app.getBoundingClientRect().top < 0) app.scrollIntoView({ behavior: "smooth" });
+      const title = document.querySelector(`.proto-step[data-step="${state.step}"] .proto-title`);
+      if (title) title.focus({ preventScroll: true });
+    }
+  }
+
+  function goTo(step) { state.step = step; render(true); }
+
+  // ----- Events -----
+  $("nextBtn").addEventListener("click", () => {
+    const miss = missingOnStep(state.step);
+    if (miss.length) {
+      // On the form step, show every error at once and jump to the first one
+      if (state.step === 3) {
+        Object.keys(FIELDS).forEach(k => { state.touched[k] = true; validateField(k); });
+        const firstBad = document.querySelector("#personForm .is-invalid");
+        if (firstBad) firstBad.focus();
+      }
+      renderNav(true);
+      refreshIcons();
+      return;
+    }
+    if (state.step === STEPS.length) state.ref = "PA-" + YEAR + "-" + Math.floor(100000 + Math.random() * 900000);
+    goTo(state.step + 1);
+  });
+
+  $("backBtn").addEventListener("click", () => goTo(state.step - 1));
+
+  // Stepper "go back" buttons and review "Edit" buttons both use data-go
+  document.querySelector(".proto-app").addEventListener("click", e => {
+    const go = e.target.closest("[data-go]");
+    if (go && !go.disabled) goTo(Number(go.dataset.go));
+  });
+
+  $("typeOptions").addEventListener("click", e => {
+    const btn = e.target.closest("[data-type]");
+    if (!btn) return;
+    state.type = btn.dataset.type;
+    render(false);
+  });
+
+  $("officeSelect").addEventListener("change", e => {
+    state.office = e.target.value;
+    renderOfficeInfo();
+    renderNav(false);
+    refreshIcons();
+  });
+
+  $("dateGrid").addEventListener("click", e => {
+    const btn = e.target.closest("[data-date]");
+    if (!btn || btn.disabled) return;
+    const i = Number(btn.dataset.date);
+    if (i !== state.dateIndex) state.time = null;   // new date = pick the time again
+    state.dateIndex = i;
+    render(false);
+  });
+
+  $("timeArea").addEventListener("click", e => {
+    const btn = e.target.closest("[data-time]");
+    if (!btn || btn.disabled) return;
+    state.time = btn.dataset.time;
+    render(false);
+  });
+
+  document.querySelectorAll("#personForm [data-field]").forEach(input => {
+    const key = input.dataset.field;
+    input.addEventListener("input", () => {
+      state.person[key] = input.value;
+      validateField(key);          // only shows red/green after the user has left the field once
+      renderNav(false);
+      refreshIcons();
+    });
+    input.addEventListener("blur", () => {
+      if (input.value.trim() === "" && !state.touched[key]) return;   // don't scold an empty field the user just tabbed past
+      state.touched[key] = true;
+      validateField(key);
+    });
+  });
+  $("personForm").addEventListener("submit", e => { e.preventDefault(); $("nextBtn").click(); });
+
+  $("restartBtn").addEventListener("click", () => {
+    Object.assign(state, { type: null, office: "", dateIndex: null, time: null, touched: {}, ref: "" });
+    Object.keys(state.person).forEach(k => state.person[k] = "");
+    document.querySelectorAll("#personForm [data-field]").forEach(input => {
+      input.value = "";
+      input.classList.remove("is-invalid", "is-valid");
+    });
+    goTo(1);
+  });
+
+  $("toggleLabels").addEventListener("change", e => document.body.classList.toggle("hide-us", !e.target.checked));
+
+  render(false);
 </script>
 
 </body>
