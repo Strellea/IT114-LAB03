@@ -1239,19 +1239,123 @@
 
     <section>
       <h2>Validation Feedback and Reflection</h2>
-      <div class="todo-box">To be completed in Milestone 5.</div>
-      <!-- TEMPLATE – copy this when you fill in Milestone 5, then delete the todo-box above.
-      <h3>Feedback summary (Round 2 – different users from Round 1)</h3>
-      <table>
-        <tr><th>User</th><th>Task tried</th><th>What was confusing</th><th>Solves a real problem?</th><th>Easier (1–5) and why</th><th>One thing to change</th></tr>
-        <tr><td>User 4 – ___ applicant</td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td>User 5 – ___ applicant</td><td></td><td></td><td></td><td></td><td></td></tr>
-      </table>
-      <h3>Reflection – what we would do differently next sprint</h3>
-      <p>...</p>
-      -->
-    </section>
+      <p class="note">
+        Round 2 was done on September 28, 2026 with two new users (not from Round 1), using the Appendix E questions.
+        Users are described by role only. This section gives the full details behind
+        <a href="#entry-4">Decision Log Entry #4</a>.
+      </p>
 
+      <h3>Feedback summary (Round 2)</h3>
+      <div class="table-wrap">
+        <table>
+          <tr>
+            <th>Question (Appendix E)</th>
+            <th>User 4 – First-time applicant</th>
+            <th>User 5 – Returning applicant</th>
+          </tr>
+          <tr>
+            <td>1. Could they complete the task?</td>
+            <td>Yes. Went from choosing the application type and DFA site, to date and time, to personal information.</td>
+            <td>Yes, without much difficulty. Picked a date and time, entered information, and reviewed before confirming.</td>
+          </tr>
+          <tr>
+            <td>2. Anything confusing or surprising?</td>
+            <td>The four steps were easy to understand. But they were a little unsure what they needed to prepare
+              before starting. They found "What to bring" helpful but wanted more information about the requirements.</td>
+            <td>Liked that the date page clearly showed which dates were fully booked and which had slots.
+              But there were many time choices, so it took a little time to look through them.</td>
+          </tr>
+          <tr>
+            <td>3. Does it solve a problem from the original?</td>
+            <td>Yes. Easier to follow because the process is split into steps, so they do not have to look for everything at once.</td>
+            <td>Yes. Feels more organized. Especially liked the progress steps and the Review page.</td>
+          </tr>
+          <tr>
+            <td>4. How much easier (1–5)?</td>
+            <td><strong>4/5</strong> – steps are clear and pages are not too crowded. Would be easier with more instructions
+              for first-time applicants.</td>
+            <td><strong>4/5</strong> – easier to understand, and they can see their appointment details before confirming.</td>
+          </tr>
+          <tr>
+            <td>5. One thing to change</td>
+            <td>Add a short "Before you start" section that tells first-time users what to prepare.</td>
+            <td>Make it easier for returning users to enter personal information, instead of typing the same details again.</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>How the user stories did</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>User story</th><th>Result</th><th>Evidence</th></tr>
+          <tr>
+            <td>US1 – See my progress</td>
+            <td><strong>Worked</strong></td>
+            <td>Both users said the steps made it easier to follow. User 5 especially liked the progress steps.</td>
+          </tr>
+          <tr>
+            <td>US2 – Clear main button</td>
+            <td>Not tested directly</td>
+            <td>Both users finished the task, but neither talked about the buttons, and we did not ask.</td>
+          </tr>
+          <tr>
+            <td>US3 – Tell me right away when I make a mistake</td>
+            <td>Not tested directly</td>
+            <td>Our notes do not show that either user typed a wrong value, so we cannot say if the error messages helped.</td>
+          </tr>
+          <tr>
+            <td>US4 – Short, organized requirements</td>
+            <td><strong>Partly worked</strong></td>
+            <td>Pages felt organized and "not too crowded", but the first-time user still did not know what to prepare
+              and wanted more requirement details.</td>
+          </tr>
+          <tr>
+            <td>US5 – Clear dates and times</td>
+            <td><strong>Partly worked</strong></td>
+            <td>Full and open dates were clear to User 5, but the long list of time choices slowed them down.</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>Reflection – what we would do differently next sprint</h3>
+      <p>
+        The main idea of our redesign worked: splitting the booking into clear steps with a progress indicator made
+        both users feel it was easier and more organized, and both gave it 4 out of 5. But the feedback also showed that
+        some of our choices went too far or not far enough. In the next sprint we would:
+      </p>
+      <ol>
+        <li>
+          <strong>Add a "Before you start" checklist for first-time applicants.</strong> We hid the requirement details to keep
+          the page short (progressive disclosure), but User 4 still did not know what to prepare. Hiding information helps
+          returning users, but first-time users need to see it earlier. We would show a short checklist <em>before</em> step 1
+          (for example: PSA birth certificate, valid ID, filled-out form), with a link to the full DFA list. This would be a new
+          user story: <em>"As a first-time applicant, I want to know what to prepare before I start booking, so that I do not
+          have to stop halfway."</em>
+        </li>
+        <li>
+          <strong>Make choosing a time faster.</strong> User 5 had to look through many time choices. We would group times into
+          "Morning" and "Afternoon", hide fully booked times (with a "show booked times" option), and highlight the earliest open
+          time, so users see fewer choices at once.
+        </li>
+        <li>
+          <strong>Save details for returning applicants.</strong> User 5 did not want to type the same information again. We would
+          use the <em>Saved preferences / defaults</em> pattern: a "Use my details from last time" option that fills in the form,
+          which the user can still edit. Because this is personal information, it should only be saved if the user agrees.
+          This is a new user story from Round 2 that we did not hear in Round 1.
+        </li>
+        <li>
+          <strong>Plan the test better.</strong> Our task did not make users type a wrong value or talk about the buttons, so we
+          could not check US2 and US3. Next time we would add a step like "type your mobile number" without giving the format,
+          ask directly "Was it easy to find where to click next?", and write down exactly what users say while they work.
+          We would also test with more than two users, and on a phone as well as a computer.
+        </li>
+      </ol>
+      <p>
+        <strong>What we learned:</strong> A design can be "easier" overall and still miss something for one type of user.
+        First-time and returning applicants need different things: first-timers need more guidance up front, while returning
+        users want to go faster and not repeat work. Testing with both types showed us this.
+      </p>
+    </section>
   </div>
 </main>
 
