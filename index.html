@@ -6,6 +6,8 @@
 <title>Lab 3 – DFA Passport Appointment Redesign</title>
 <!-- UI kit: Bootstrap 5.3.8 (MIT) from jsDelivr CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+<!-- Handwriting font for the sketch in the Design Log (Google Fonts, SIL OFL) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap">
 <style>
   :root {
     --navy: #1f3a68;
@@ -142,144 +144,144 @@
     border-radius: 6px;
   }
 
-  .wireframe {
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    background: #fafbfc;
-    padding: 18px;
-    margin: 18px 0;
-    font-family: Arial, sans-serif;
-  }
-
-  .wf-header {
-    background: var(--navy);
-    color: #fff;
-    padding: 10px 14px;
-    border-radius: 6px;
-    margin-bottom: 14px;
-    font-weight: 700;
-  }
-
-  .wf-stepper {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin: 12px 0 18px;
-    font-size: 0.86rem;
-  }
-
-  .wf-step {
-    padding: 7px 10px;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: #fff;
-  }
-
-  .wf-step.active {
-    background: var(--navy-light);
-    border-color: var(--navy);
-    color: var(--navy);
-    font-weight: 700;
-  }
-
-  .wf-step.done {
-    background: #eef5ef;
-    border-color: #8db49a;
-  }
-
-  .wf-panel {
+  /* ===== Annotated sketch (Design Log) – drawn to look like pencil on paper ===== */
+  .sketch-board {
+    --pencil: #2f2f2f;
+    --pen-red: #c0392b;
+    font-family: "Patrick Hand", "Comic Sans MS", cursive;
+    color: var(--pencil);
+    background-color: #fffef8;
+    background-image:
+      linear-gradient(#e8eef7 1px, transparent 1px),
+      linear-gradient(90deg, #e8eef7 1px, transparent 1px);
+    background-size: 22px 22px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 14px;
-    background: #fff;
-    margin: 10px 0;
+    padding: 22px 18px;
+    margin: 14px 0 22px;
+  }
+  .sk-row {
+    display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+    gap: 28px; align-items: start;
+  }
+  .sk-caption { font-size: 1.35rem; margin: 0 0 8px; text-decoration: underline wavy #9aa7bd; text-underline-offset: 5px; }
+
+  /* the phone-like screen outline */
+  .sk-screen {
+    border: 2.5px solid var(--pencil);
+    border-radius: 18px 10px 20px 12px / 12px 20px 10px 18px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 12px 14px 14px;
+  }
+  .sk-bar {
+    border: 2px solid var(--pencil); border-radius: 6px 3px 7px 4px;
+    padding: 3px 8px; margin-bottom: 12px; font-size: 1.05rem;
+    background: repeating-linear-gradient(-45deg, #d9d9d9 0 1px, transparent 1px 5px);
+  }
+  .sk-title { font-size: 1.25rem; margin: 6px 0 8px; }
+  .sk-label { font-size: 1.05rem; margin: 0 0 4px; }
+  .sk-small { font-size: 0.9rem; color: #666; margin: 2px 0 0; }
+  .sk-center { text-align: center; }
+
+  /* boxes look slightly crooked, like hand drawing */
+  .sk-box {
+    border: 2px solid var(--pencil);
+    border-radius: 10px 4px 9px 5px / 5px 9px 4px 10px;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.18);
+    padding: 8px 10px; margin-bottom: 10px; transform: rotate(-0.4deg);
+  }
+  .sk-box:nth-of-type(even) { transform: rotate(0.35deg); }
+
+  /* stepper */
+  .sk-steps { display: flex; }
+  .sk-steps > div { flex: 1; text-align: center; position: relative; font-size: 0.85rem; }
+  .sk-steps > div::before {
+    content: ""; position: absolute; top: 12px; left: -50%; width: 100%;
+    border-top: 2px solid var(--pencil); z-index: 0;
+  }
+  .sk-steps > div:first-child::before { display: none; }
+  .sk-steps > div.todo::before { border-top-style: dashed; border-color: #999; }
+  .sk-dot {
+    position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border: 2px solid var(--pencil); border-radius: 50% 45% 52% 48%;
+    background: #fffef8; font-size: 0.95rem;
+  }
+  .sk-dot.on { background: var(--pencil); color: #fff; }
+  .sk-steps > div.todo { color: #888; }
+  .sk-steps > div.todo .sk-dot { border-color: #999; }
+
+  /* choices, dropdown, list rows */
+  .sk-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sk-opt, .sk-cell {
+    border: 2px solid var(--pencil); border-radius: 7px 3px 6px 4px;
+    padding: 4px 6px; text-align: center; background: #fff; line-height: 1.15;
+  }
+  .sk-opt.sel, .sk-cell.sel {
+    background: repeating-linear-gradient(45deg, #dde3ec 0 2px, #fff 2px 7px); font-weight: 700;
+    border-width: 3px;
+  }
+  .sk-select {
+    border: 2px solid var(--pencil); border-radius: 5px 3px 6px 3px;
+    padding: 3px 8px; display: flex; justify-content: space-between; background: #fff;
+  }
+  .sk-scribble {
+    height: 7px; width: 78%; margin: 8px 0 2px; opacity: 0.55; border-radius: 4px;
+    background: repeating-linear-gradient(90deg, #8a8a8a 0 16px, transparent 16px 21px);
+  }
+  .sk-scribble.short { width: 45%; }
+  .sk-acc {
+    display: flex; justify-content: space-between;
+    border-bottom: 1.5px dashed #999; padding: 3px 2px;
+  }
+  .sk-acc:last-child { border-bottom: 0; }
+
+  /* date and time cells: crossed-out box = fully booked */
+  .sk-dates { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+  .sk-times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .sk-cell { font-size: 0.85rem; padding: 3px 2px; }
+  .sk-cell small { display: block; font-size: 0.75rem; color: #666; }
+  .sk-cell.full {
+    color: #9a9a9a; border-color: #9a9a9a; border-style: dashed;
+    background:
+      linear-gradient(to top right, transparent 47%, #9a9a9a 48%, #9a9a9a 52%, transparent 53%),
+      linear-gradient(to bottom right, transparent 47%, #9a9a9a 48%, #9a9a9a 52%, transparent 53%);
+  }
+  .sk-hold {
+    border: 2px dashed var(--pencil); border-radius: 6px; padding: 2px 8px;
+    margin-top: 8px; font-size: 0.9rem;
   }
 
-  .wf-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+  /* buttons */
+  .sk-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .sk-actions.right { justify-content: flex-end; }
+  .sk-btn {
+    display: inline-block; border: 2px solid var(--pencil); border-radius: 8px 4px 9px 5px;
+    padding: 3px 12px; background: #fff;
   }
+  .sk-btn.main { background: var(--pencil); color: #fff; font-size: 1.15rem; padding: 5px 16px; }
+  .sk-btn.light { border-color: #999; color: #777; }
 
-  .wf-option {
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 8px;
-    text-align: center;
-    background: #fff;
+  /* red numbered callouts */
+  .sk-pinwrap { position: relative; }
+  .sk-pin, .sk-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border: 2.5px solid var(--pen-red); border-radius: 50% 46% 52% 47%;
+    color: var(--pen-red); background: #fffef8; font-size: 1rem; font-weight: 700; flex-shrink: 0;
   }
-
-  .wf-option.available {
-    border-color: var(--navy);
+  .sk-pin { position: absolute; top: -13px; right: -13px; z-index: 2; }
+  .sk-pin.left { right: auto; left: -30px; top: 50%; transform: translateY(-50%); }
+  .sk-notes { list-style: none; padding: 0; margin: 34px 0 0; }
+  .sk-notes li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 1.12rem; line-height: 1.3; margin-bottom: 16px;
   }
+  .sk-notes b { color: var(--pen-red); font-weight: 400; }
+  .sk-key { font-size: 0.95rem; color: #555; margin: 18px 0 0; }
 
-  .wf-option.unavailable {
-    opacity: 0.55;
-    background: #f1f2f4;
-  }
-
-  .wf-time-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .wf-input {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 9px;
-    margin: 5px 0 10px;
-    background: #fff;
-  }
-
-  .wf-input.error {
-    border: 2px solid #b42318;
-  }
-
-  .wf-error {
-    color: #b42318;
-    font-size: 0.84rem;
-    margin-top: -5px;
-    margin-bottom: 8px;
-  }
-
-  .wf-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 14px;
-  }
-
-  .wf-button {
-    display: inline-block;
-    padding: 9px 14px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: #fff;
-    font-weight: 600;
-  }
-
-  .wf-button.primary {
-    background: var(--navy);
-    color: #fff;
-    border-color: var(--navy);
-  }
-
-  .callout {
-    background: #fff8dc;
-    border: 1px dashed var(--gold);
-    border-radius: 7px;
-    padding: 10px 12px;
-    margin-top: 10px;
-    font-size: 0.9rem;
-  }
-
-  .callout strong { color: var(--navy); }
-
-  @media (max-width: 700px) {
-    .wf-grid { grid-template-columns: repeat(2, 1fr); }
-    .wf-time-grid { grid-template-columns: 1fr; }
+  @media (max-width: 760px) {
+    .sk-row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .sk-notes { margin-top: 10px; }
   }
 
   /* Icons (Lucide) */
@@ -1010,125 +1012,143 @@
     </section>
 
     <section>
-      <h2>Annotated Wireframe</h2>
+      <h2>Annotated Sketch – First Two Screens</h2>
       <p class="note">
-        These rough wireframes show the first two redesign screens planned for Milestone 4.
-        Each callout is explicitly connected to a user story.
+        A rough sketch of the first two screens of our redesign. Each red number is a callout:
+        it points to one part of the screen, and the note with the same number says which user story it answers.
       </p>
 
-      <h3>Screen 1 — Appointment Date &amp; Time</h3>
-      <div class="wireframe">
-        <div class="wf-header">DFA PASSPORT APPOINTMENT</div>
+      <!-- ---------- SKETCH: Screen 1 – Site Location ---------- -->
+      <div class="sketch-board">
+        <div class="sk-row">
+          <div>
+            <p class="sk-caption">Screen 1 – Site Location</p>
+            <div class="sk-screen">
+              <div class="sk-bar">DFA Passport Appointment</div>
 
-        <div class="wf-stepper">
-          <span class="wf-step done">✓ Location</span>
-          <span>→</span>
-          <span class="wf-step active">● Date &amp; Time</span>
-          <span>→</span>
-          <span class="wf-step">3 Personal Info</span>
-          <span>→</span>
-          <span class="wf-step">4 Review</span>
-        </div>
+              <div class="sk-pinwrap">
+                <span class="sk-pin">1</span>
+                <div class="sk-steps">
+                  <div><span class="sk-dot on">1</span><br>Site</div>
+                  <div class="todo"><span class="sk-dot">2</span><br>Date/Time</div>
+                  <div class="todo"><span class="sk-dot">3</span><br>Info</div>
+                  <div class="todo"><span class="sk-dot">4</span><br>Review</div>
+                </div>
+                <p class="sk-small sk-center">Step 1 of 4</p>
+              </div>
 
-        <div class="note"><strong>STEP 2 OF 4</strong></div>
+              <p class="sk-title">Where and what for?</p>
 
-        <div class="wf-panel">
-          <h3>Select Appointment Date</h3>
-          <p class="note">September 2026</p>
-          <div class="wf-grid">
-            <div class="wf-option unavailable"><strong>Sep 28</strong><br><small>FULL</small></div>
-            <div class="wf-option unavailable"><strong>Sep 29</strong><br><small>FULL</small></div>
-            <div class="wf-option available"><strong>Sep 30</strong><br><small>8 slots</small></div>
-            <div class="wf-option available"><strong>Oct 1</strong><br><small>5 slots</small></div>
+              <div class="sk-box sk-pinwrap">
+                <span class="sk-pin">2</span>
+                <p class="sk-label">Application type</p>
+                <div class="sk-two">
+                  <span class="sk-opt sel">New passport</span>
+                  <span class="sk-opt">Renewal</span>
+                </div>
+              </div>
+
+              <div class="sk-box">
+                <p class="sk-label">DFA site</p>
+                <div class="sk-select">Butuan (Robinsons Butuan) <span>▾</span></div>
+                <div class="sk-scribble"></div>
+                <div class="sk-scribble short"></div>
+              </div>
+
+              <div class="sk-box sk-pinwrap">
+                <span class="sk-pin">3</span>
+                <p class="sk-label">What to bring</p>
+                <div class="sk-acc"><span>✓ Appointment page</span><span>⌄</span></div>
+                <div class="sk-acc"><span>✓ PSA birth certificate</span><span>⌄</span></div>
+                <div class="sk-acc"><span>✓ Valid ID + photocopy</span><span>⌄</span></div>
+              </div>
+
+              <div class="sk-actions right">
+                <span class="sk-pinwrap"><span class="sk-pin left">4</span><span class="sk-btn main">Continue →</span></span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="wf-panel">
-          <h3>Available Time</h3>
-          <div class="wf-time-grid">
-            <div class="wf-option available">9:00 AM</div>
-            <div class="wf-option available">10:00 AM</div>
-            <div class="wf-option available">11:00 AM</div>
-          </div>
-        </div>
-
-        <div class="wf-actions">
-          <span class="wf-button">Back</span>
-          <span class="wf-button primary">Continue →</span>
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 1 — US1 / Stepper:</strong>
-          The stepper shows the applicant's current position and remaining steps so first-time users
-          know what to expect.
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 2 — US5 / Clear selection controls:</strong>
-          Available dates and time slots are presented as clearly bordered selectable cards so users
-          can distinguish available options from unavailable ones.
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 3 — US2:</strong>
-          A prominent labeled primary button makes the next action immediately recognizable.
+          <ul class="sk-notes">
+            <li><span class="sk-num">1</span><span><b>US1 · Stepper</b> – 4 circles with names and “Step 1 of 4”, so the user always knows where they are and how many steps are left.</span></li>
+            <li><span class="sk-num">2</span><span><b>US4 · Grouped cards</b> – each question sits in its own box (type, site, what to bring) instead of one long page of text.</span></li>
+            <li><span class="sk-num">3</span><span><b>US4 · Progressive disclosure</b> – only a short list of requirements. Click ⌄ to open the details, so there is no wall of text.</span></li>
+            <li><span class="sk-num">4</span><span><b>US2 · One clear main button</b> – one big dark “Continue”, always at the bottom right. If something is missing, a short hint next to it says what.</span></li>
+          </ul>
         </div>
       </div>
 
-      <h3>Screen 2 — Personal Information</h3>
-      <div class="wireframe">
-        <div class="wf-header">DFA PASSPORT APPOINTMENT</div>
+      <!-- ---------- SKETCH: Screen 2 – Date & Time ---------- -->
+      <div class="sketch-board">
+        <div class="sk-row">
+          <div>
+            <p class="sk-caption">Screen 2 – Date &amp; Time</p>
+            <div class="sk-screen">
+              <div class="sk-bar">DFA Passport Appointment</div>
 
-        <div class="wf-stepper">
-          <span class="wf-step done">✓ Location</span>
-          <span>→</span>
-          <span class="wf-step done">✓ Date &amp; Time</span>
-          <span>→</span>
-          <span class="wf-step active">● Personal</span>
-          <span>→</span>
-          <span class="wf-step">4 Review</span>
+              <div class="sk-pinwrap">
+                <span class="sk-pin">5</span>
+                <div class="sk-steps">
+                  <div><span class="sk-dot">✓</span><br>Site</div>
+                  <div><span class="sk-dot on">2</span><br>Date/Time</div>
+                  <div class="todo"><span class="sk-dot">3</span><br>Info</div>
+                  <div class="todo"><span class="sk-dot">4</span><br>Review</div>
+                </div>
+                <p class="sk-small sk-center">Step 2 of 4</p>
+              </div>
+
+              <p class="sk-title">Pick a date and time</p>
+
+              <div class="sk-box sk-pinwrap">
+                <span class="sk-pin">6</span>
+                <p class="sk-label">Date <span class="sk-small">(Oct 2026)</span></p>
+                <p class="sk-small mt-0 mb-1">Earliest open date: Tue, Oct 13</p>
+                <div class="sk-dates">
+                  <span class="sk-cell full">Oct 5<small>full</small></span>
+                  <span class="sk-cell full">Oct 6<small>full</small></span>
+                  <span class="sk-cell full">Oct 7<small>full</small></span>
+                  <span class="sk-cell full">Oct 8<small>full</small></span>
+                  <span class="sk-cell full">Oct 9<small>full</small></span>
+                  <span class="sk-cell full">Oct 12<small>full</small></span>
+                  <span class="sk-cell sel">Oct 13<small>23 left</small></span>
+                  <span class="sk-cell">Oct 14<small>41 left</small></span>
+                  <span class="sk-cell">Oct 15<small>60 left</small></span>
+                  <span class="sk-cell">Oct 16<small>85 left</small></span>
+                </div>
+              </div>
+
+              <div class="sk-box sk-pinwrap">
+                <span class="sk-pin">7</span>
+                <p class="sk-label">Time <span class="sk-small">(shows after picking a date)</span></p>
+                <div class="sk-times">
+                  <span class="sk-cell">8–9 AM<small>18 left</small></span>
+                  <span class="sk-cell">9–10 AM<small>3 left</small></span>
+                  <span class="sk-cell sel">10–11 AM<small>1 left</small></span>
+                  <span class="sk-cell full">11–12<small>booked</small></span>
+                  <span class="sk-cell full">12–1 PM<small>booked</small></span>
+                  <span class="sk-cell full">1–2 PM<small>booked</small></span>
+                  <span class="sk-cell full">2–3 PM<small>booked</small></span>
+                  <span class="sk-cell">3–4 PM<small>1 left</small></span>
+                  <span class="sk-cell full">4–5 PM<small>booked</small></span>
+                </div>
+                <div class="sk-hold">ⓘ Your time is held for 30 min</div>
+              </div>
+
+              <div class="sk-actions">
+                <span class="sk-btn light">← Back</span>
+                <span class="sk-pinwrap"><span class="sk-pin left">8</span><span class="sk-btn main">Continue →</span></span>
+              </div>
+            </div>
+          </div>
+
+          <ul class="sk-notes">
+            <li><span class="sk-num">5</span><span><b>US1 · Stepper</b> – the finished step gets a ✓ and the user can click it to go back. The current step is filled in.</span></li>
+            <li><span class="sk-num">6</span><span><b>US5 · Selectable date cards</b> – fully booked dates are crossed out and can’t be clicked. Open dates show how many slots are left, plus an “earliest open date” line.</span></li>
+            <li><span class="sk-num">7</span><span><b>US5 · Progressive disclosure</b> – the times only show after a date is picked. Booked times are crossed out, the picked time is striped.</span></li>
+            <li><span class="sk-num">8</span><span><b>US2 · One clear main button</b> – “Continue” is big and dark, “Back” is light. (On the real site, Back is darker than Next.)</span></li>
+          </ul>
         </div>
-
-        <div class="note"><strong>STEP 3 OF 4</strong></div>
-
-        <div class="wf-panel">
-          <h3>Applicant Information</h3>
-          <label>First Name</label>
-          <div class="wf-input">Juan</div>
-
-          <label>Last Name</label>
-          <div class="wf-input">Dela Cruz</div>
-        </div>
-
-        <div class="wf-panel">
-          <h3>Contact Information</h3>
-          <label>Mobile Number</label>
-          <div class="wf-input error">0912345678</div>
-          <div class="wf-error">⚠ Please enter a valid 11-digit number.</div>
-        </div>
-
-        <div class="wf-actions">
-          <span class="wf-button">← Back</span>
-          <span class="wf-button primary">Continue →</span>
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 1 — US3 / Inline Validation:</strong>
-          The contact number is validated immediately and the error message appears beside the field,
-          allowing the user to correct the mistake before continuing.
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 2 — US4 / Grouped Fields:</strong>
-          Related information is grouped into sections so users do not have to process one long list
-          of fields.
-        </div>
-
-        <div class="callout">
-          <strong>CALL OUT 3 — US1 / Stepper:</strong>
-          The progress indicator remains visible so users can understand where they are in the
-          appointment process.
-        </div>
+        <p class="sk-key">Sketch key: crossed-out box = fully booked · striped = selected · dark button = main action · ⌄ = click to open</p>
       </div>
     </section>
 
