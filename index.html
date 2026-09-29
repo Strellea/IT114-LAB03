@@ -767,15 +767,53 @@
         </p>
       </div>
 
-      <!-- TEMPLATE – copy this for Entry #3 (build) and Entry #4 (validation). Use the real date you did the work.
       <div class="log-entry">
-        <h3>Entry #3 – Building the prototype</h3>
-        <p class="date">September __, 2026 · Milestone 4</p>
-        <p><strong>Changes while building:</strong> ...</p>
-        <p><strong>Problems we had:</strong> ...</p>
-        <p><strong>How we fixed them:</strong> ...</p>
-      </div>
-      -->
+  <h3>Entry #3 – Building the Prototype</h3>
+    <p class="date">September 29, 2026 · Milestone 4</p>
+  
+    <p>
+      <strong>Changes while building:</strong>
+      While building the prototype, we made some changes from our original wireframe to make the
+      appointment process clearer and more functional. We added four main steps:
+      <strong>Site Location, Date &amp; Time, Personal Info, and Review</strong>. We also added a
+      final confirmation screen after the user completes the process. The stepper now shows the
+      current step, completed steps, and “Step X of 4” to address US1. For US2, we kept one clear
+      primary <strong>Continue</strong> button at the bottom of each step and added a message that
+      tells the user what is still missing before they can continue. For US4, we organized related
+      information into separate cards and made the requirements expandable instead of showing all
+      the details at once. We also improved the date and time selection for US5 by showing available
+      slots, disabling fully booked options, and only showing time slots after a date is selected.
+      A review screen with <strong>Edit</strong> buttons was also added so users can check and
+      correct their information before confirming.
+    </p>
+  
+    <p>
+      <strong>Problems we encountered:</strong>
+      One problem was keeping the prototype simple while still making all five user stories
+      functional. The appointment process contains several types of information, so putting
+      everything on one screen would make the page long and crowded. Another problem was making
+      it clear why the user could not continue when required information was missing. We also
+      needed a way to show form errors immediately without displaying error messages before the
+      user had a chance to enter their information. For the date and time section, we needed to
+      clearly separate available, selected, and fully booked options.
+    </p>
+  
+    <p>
+      <strong>How we resolved them:</strong>
+      We divided the appointment process into separate steps and used the
+      <strong>Stepper</strong> pattern so only the information needed for the current step is shown.
+      We added grouped cards and <strong>Progressive Disclosure</strong> to reduce the amount of
+      information visible at one time. Instead of simply preventing the user from continuing, the
+      prototype displays a short message explaining what information is still required. For the
+      personal information form, we used <strong>Inline Validation</strong> so an error appears near
+      the field after the user interacts with it, such as when the mobile number does not contain
+      11 digits or does not start with 09. For appointment schedules, available dates and times are
+      clickable, selected options are highlighted, and fully booked options are disabled. We used
+      Bootstrap components and custom CSS/JavaScript together because Bootstrap provided useful
+      form, button, accordion, and responsive styles, while custom code was needed for the stepper
+      and appointment-selection behavior.
+    </p>
+  </div>
     </section>
 
     <section>
