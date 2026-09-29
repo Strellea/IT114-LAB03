@@ -75,11 +75,6 @@
   }
   section h3 { font-size: 1rem; margin: 18px 0 8px; }
 
-  #designlog p,
-  #designlog li {
-  text-align: justify;
-  }
-
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
   th, td { border: 1px solid var(--border); padding: 9px 11px; text-align: left; vertical-align: top; }
@@ -287,6 +282,25 @@
   @media (max-width: 760px) {
     .sk-row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .sk-notes { margin-top: 10px; }
+  }
+
+  /* Justified text in the Design Log (paragraphs and lists only – not tables or the sketch) */
+  #designlog section > p,
+  #designlog .log-entry p,
+  #designlog .log-entry li,
+  #designlog section > ol li,
+  #designlog details li,
+  #designlog .decision-card {
+    text-align: justify;
+    hyphens: auto;
+  }
+  @media (max-width: 600px) {
+    #designlog section > p,
+    #designlog .log-entry p,
+    #designlog .log-entry li,
+    #designlog section > ol li,
+    #designlog details li,
+    #designlog .decision-card { text-align: left; }
   }
 
   /* Icons (Lucide) */
@@ -774,7 +788,7 @@
 
       <div class="log-entry">
         <h3>Entry #3 – Building the prototype</h3>
-        <p class="date">September 26, 2026 · Milestone 4</p>
+        <p class="date">September 29, 2026 · Milestone 4</p>
 
   
         <p>
@@ -819,44 +833,54 @@
           form, button, accordion, and responsive styles, while custom code was needed for the stepper
           and appointment-selection behavior.
         </p>
-      </div>
   
-      <div class="log-entry">
-        <h3>Entry #4 – Validation Feedback</h3>
-        <p class="date">September 28, 2026 · Milestone 5</p>
-      
+
+      <div class="log-entry" id="entry-4">
+        <h3>Entry #4 – Validation with new users (Round 2)</h3>
+        <p class="date">September 29, 2026 · Milestone 5</p>
+
         <p>
           <strong>Validation process:</strong>
-          We showed our finished prototype to two new users who were not part of the first interviews.
-          User 4 was a first-time applicant, while User 5 was a returning applicant. We asked them to
-          try the whole appointment process. They selected an application type and DFA site, chose a
-          date and time, entered their information, reviewed their details, and confirmed the appointment.
-          After they finished, we asked them the questions from Appendix E.
+          We tested our prototype with two new users who were not part of the Round 1 interviews.
+          User 4 was a first-time applicant, while User 5 was a returning applicant. We deployed the
+          prototype on Vercel, sent each user the link, and talked with them on a Messenger call.
+          User 4 went through the whole booking: choosing the application type and DFA site, picking a
+          date and time, and entering personal information. User 5 picked a date and time, entered
+          personal information, and checked the Review page before confirming. After they finished,
+          we asked them the questions from Appendix E.
         </p>
-      
+
         <p>
           <strong>What worked well:</strong>
-          Both users said that the prototype was easy to understand and follow. They liked the progress
-          indicator because it showed their current step and the steps that were left. The Continue and
-          Back buttons were also easy to find. User 4 liked that the requirements were organized and
-          could be opened when needed. User 5 liked the error messages and the Review page because they
-          helped check and correct information before confirming.
+          Both users completed the task. Both said the redesign was easier to follow because the
+          process is split into steps (US1). User 4 said the pages were not too crowded and found the
+          "What to bring" section helpful (US4). User 5 said the design felt more organized, liked that
+          the date page clearly showed which dates were fully booked and which still had slots (US5),
+          and liked checking their information on the Review page before confirming. User 4 typed a
+          mobile number with only 10 digits, saw the error message right under the field, and fixed it
+          before continuing (US3).
         </p>
-      
+
         <p>
           <strong>What did not work as expected:</strong>
-          User 4 was a little confused about why some dates and times could not be selected, even though
-          they were marked as fully booked. User 5 also had to check different dates and times to find
-          an available schedule. This showed that the date and time section could still be improved.
+          User 4 was still unsure what to prepare before starting and wanted more information about
+          the requirements, so our short "What to bring" list was not enough for a first-time applicant (US4).
+          User 5 said there were many time choices on the screen, so it took time to look through them (US5).
+          User 5 also wanted an easier way to enter personal information instead of typing the same details
+          again, which our redesign did not cover. Both users used the Continue button to finish, but we did
+          not ask them about the buttons, so we have little feedback on US2.
         </p>
-      
+
         <p>
           <strong>Result:</strong>
-          User 4 gave the prototype a <strong>5 out of 5</strong>, while User 5 gave it a
-          <strong>4 out of 5</strong> for ease of use. Both users found the redesigned process easier
-          to follow. Based on their feedback, we would improve the date and time section by making
-          fully booked schedules easier to notice and making the earliest available appointment
-          easier to find.
+          Both users gave the prototype a <strong>4 out of 5</strong> for ease of use. Based on their feedback,
+          our next sprint would add a "Before you start" checklist for first-time applicants, make choosing a
+          time faster, save details for returning applicants, and plan a better test for US2.
+        </p>
+
+        <p class="note">
+          See <a href="#validation">Validation Feedback and Reflection</a> for each user's full answers,
+          how each user story did, and our reflection for the next sprint.
         </p>
       </div>
     </section>
@@ -1089,9 +1113,10 @@
         </tr>
         <tr>
           <td>Validating (Round 2)</td>
-          <td>In person on a laptop/phone, or Messenger video call with screen sharing <em>(planned – update after Milestone 5)</em></td>
-          <td>The user needs to try the prototype themselves and talk out loud while doing the task
-            (Appendix E). Screen sharing lets us watch where they get stuck.</td>
+          <td>Vercel (to put the prototype online) + Messenger call</td>
+          <td>Vercel gave us a free public link, so each user could open the prototype on their own device without
+            downloading any file. The Messenger call let us talk with them while they used it and ask the
+            Appendix E questions right after.</td>
         </tr>
       </table>
     </section>
@@ -1237,7 +1262,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="validation">
       <h2>Validation Feedback and Reflection</h2>
       <p class="note">
         Round 2 was done on September 28, 2026 with two new users (not from Round 1), using the Appendix E questions.
@@ -1295,13 +1320,15 @@
           </tr>
           <tr>
             <td>US2 – Clear main button</td>
-            <td>Not tested directly</td>
-            <td>Both users finished the task, but neither talked about the buttons, and we did not ask.</td>
+            <td><strong>Partly worked</strong></td>
+            <td>Both users moved through every step with the Continue button and finished the task.
+              But we did not ask them about the buttons, so we only know it worked, not how easy it felt.</td>
           </tr>
           <tr>
             <td>US3 – Tell me right away when I make a mistake</td>
-            <td>Not tested directly</td>
-            <td>Our notes do not show that either user typed a wrong value, so we cannot say if the error messages helped.</td>
+            <td><strong>Worked</strong></td>
+            <td>User 4 typed a mobile number with only 10 digits, saw the red error message right under the field, and fixed it
+              before continuing.</td>
           </tr>
           <tr>
             <td>US4 – Short, organized requirements</td>
@@ -1344,9 +1371,10 @@
           This is a new user story from Round 2 that we did not hear in Round 1.
         </li>
         <li>
-          <strong>Plan the test better.</strong> Our task did not make users type a wrong value or talk about the buttons, so we
-          could not check US2 and US3. Next time we would add a step like "type your mobile number" without giving the format,
-          ask directly "Was it easy to find where to click next?", and write down exactly what users say while they work.
+          <strong>Plan the test better.</strong> We did not ask users about the buttons, so we have little feedback on US2.
+          The error message (US3) only came up because User 4 happened to type a short number, and our notes do not say whether User 5 saw it.
+          Next time we would ask directly "Was it easy to find where to click next?", add a step that asks every user to
+          type their mobile number without giving the format, and write down exactly what users say while they work.
           We would also test with more than two users, and on a phone as well as a computer.
         </li>
       </ol>
@@ -1356,6 +1384,7 @@
         users want to go faster and not repeat work. Testing with both types showed us this.
       </p>
     </section>
+
   </div>
 </main>
 
